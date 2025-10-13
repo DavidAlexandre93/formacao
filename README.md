@@ -38,7 +38,7 @@ Construído em **HTML/CSS/JS** (uma única página), com busca, filtros, ordena�
 Abra o arquivo **`index.html`** e localize o bloco:
 
 ```js
-// ========= DATA (edite aqui) =========
+
 const CERTS = [
   {
     id: "AZ-204",
@@ -53,6 +53,8 @@ const CERTS = [
     skills: ["Azure", "APIs", "Functions", "App Services", "DevOps"]
   },
 ];
+
+```
 
 --- 
 
