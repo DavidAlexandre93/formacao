@@ -53,3 +53,85 @@ const CERTS = [
     skills: ["Azure", "APIs", "Functions", "App Services", "DevOps"]
   },
 ];
+
+--- 
+
+## Campos aceitos
+
+- id: identificador opcional que você usa (ex.: código do exame)
+
+- title: título do certificado/curso/diploma
+
+- issuer: emissor (ex.: Microsoft, Udemy, Alura…)
+
+- category: uma das opções abaixo
+
+- issueDate: YYYY-MM (ex.: 2025-03)
+
+- expireDate: YYYY-MM ou vazio
+
+- verifyUrl: link oficial para verificação (recomendado)
+
+- badgeUrl: imagem do badge (opcional)
+
+- logoUrl: logo do emissor (opcional)
+
+- skills: lista de palavras-chave
+
+---
+
+## Categorias disponíveis
+
+- Certificações
+
+- Diplomas
+
+- Certificados
+
+- Projetos
+
+## Emissores disponíveis no filtro
+
+- Microsoft
+
+- Udemy
+
+- Alura
+
+- Amazon
+
+- FIAP
+
+- FullCycle
+
+- USJT
+
+- Outro
+
+---
+
+## QR Code
+
+É gerado automaticamente quando verifyUrl está preenchido.
+
+---
+
+## 🧾 Exportar para PDF
+
+No site publicado, use o botão “🖨️ Exportar (Imprimir/PDF)” para gerar um PDF formatado do portfólio.
+
+---
+
+## 📜 Licença
+
+Este projeto está licenciado sob a MIT License.
+
+---
+
+## ✉️ Contato
+
+Website: https://www.davidalexandrefernandes.com.br/
+
+LinkedIn: https://www.linkedin.com/in/david-fernandes-08b005b4/
+
+GitHub: https://github.com/DavidAlexandre93
