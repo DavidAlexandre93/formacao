@@ -59,12 +59,22 @@
         gap: 14px;
       }
       .avatar {
-        width: 48px;
-        height: 48px;
+        width: 140px;
+        height: 140px;
         border-radius: 16px;
         object-fit: cover;
         border: 1px solid var(--border);
         box-shadow: var(--shadow);
+
+        /* melhorias de nitidez e UX */
+        cursor: zoom-in;
+        transition: transform .18s ease, filter .18s ease, box-shadow .18s ease;
+        image-rendering: auto;
+        -webkit-backface-visibility: hidden;
+        backface-visibility: hidden;
+      }
+      .avatar:hover{
+        filter: contrast(1.05) saturate(1.03);
       }
       h1 {
         font-size: 1.6rem;
@@ -274,6 +284,25 @@
         background: var(--card);
         border-radius: 10px;
       }
+
+      /* ===== Lightbox de zoom do avatar ===== */
+      #zoomOverlay{
+        position: fixed; inset: 0;
+        display: none; align-items: center; justify-content: center;
+        background: rgba(0,0,0,.6);
+        z-index: 9999; padding: 20px; cursor: zoom-out;
+      }
+      #zoomOverlay.open{ display: flex; }
+      #zoomOverlay img{
+        max-width: min(90vw, 720px);
+        max-height: 90vh;
+        border-radius: 16px;
+        background: var(--card);
+        box-shadow: var(--shadow);
+        transform: scale(.98);
+        transition: transform .2s ease-out;
+      }
+      #zoomOverlay.open img{ transform: scale(1.03); }
     </style>
   </head>
   <body>
@@ -284,6 +313,11 @@
             class="avatar"
             id="avatarImg"
             src="perfil.jpg"
+            srcset="perfil@2x.jpg 2x, perfil@3x.jpg 3x"
+            sizes="(max-width:640px) 100px, 140px"
+            loading="eager"
+            decoding="async"
+            fetchpriority="high"
             alt="Foto de perfil de David Fernandes"
           />
           <div>
@@ -339,6 +373,15 @@
         Construído em HTML/CSS/JS, pronto para GitHub Pages. Personalize o bloco
         <strong>DATA</strong> no código.
       </footer>
+    </div>
+
+    <!-- Overlay para zoom do avatar -->
+    <div id="zoomOverlay" aria-hidden="true">
+      <img
+        src="perfil.jpg"
+        srcset="perfil@2x.jpg 2x, perfil@3x.jpg 3x"
+        alt="Foto ampliada de David Fernandes"
+      />
     </div>
 
     <script>
@@ -693,6 +736,29 @@
       [search, fCat, fIssuer, sortBy].forEach((el) =>
         el.addEventListener("input", render)
       );
+
+      // ====== Zoom do avatar (lightbox) ======
+      const avatarImg = document.getElementById('avatarImg');
+      const zoomOverlay = document.getElementById('zoomOverlay');
+
+      avatarImg.addEventListener('click', () => {
+        zoomOverlay.classList.add('open');
+        zoomOverlay.setAttribute('aria-hidden', 'false');
+      });
+
+      zoomOverlay.addEventListener('click', (e) => {
+        if (e.target === zoomOverlay) {
+          zoomOverlay.classList.remove('open');
+          zoomOverlay.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          zoomOverlay.classList.remove('open');
+          zoomOverlay.setAttribute('aria-hidden', 'true');
+        }
+      });
 
       // Boot
       (function init() {
