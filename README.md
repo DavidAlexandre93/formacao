@@ -44,7 +44,7 @@ const CERTS = [
     id: "AZ-204",
     title: "AZ-204: Developing Solutions for Microsoft Azure",
     issuer: "Microsoft",
-    category: "Certificações",
+    category: "Certificação",
     issueDate: "",
     expireDate: "",
     verifyUrl: "",
@@ -84,13 +84,13 @@ const CERTS = [
 
 ## Categorias disponíveis
 
-- Certificações
+- Certificação
 
-- Diplomas
+- Diploma
 
-- Certificados
+- Certificado
 
-- Projetos
+- Projeto
 
 ## Emissores disponíveis no filtro
 

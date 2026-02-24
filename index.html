@@ -8,6 +8,19 @@
       name="description"
       content="Portfólio público de certificados, diplomas e certificações com links de verificação."
     />
+    <meta property="og:title" content="Certificados & Certificações - David Fernandes" />
+    <meta property="og:description" content="Portfólio público com filtros, busca e verificação de credenciais." />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="perfil.webp" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Certificados & Certificações - David Fernandes" />
+    <meta name="twitter:description" content="Portfólio público com filtros, busca e verificação de credenciais." />
+    <meta name="twitter:image" content="perfil.webp" />
+    <link rel="icon" type="image/webp" href="perfil.webp" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; connect-src 'self'; font-src 'self' data:;"
+    />
     <style>
       :root {
         --bg: #05070d;
@@ -36,6 +49,17 @@
         --shadow: 0 14px 30px rgba(40, 50, 90, 0.12);
       }
       * { box-sizing: border-box; }
+      .sr-only {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
       body {
         margin: 0;
         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
@@ -111,7 +135,6 @@
         font-weight: 700;
       }
       .btn.primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); color: #fff; border: 0; }
-      .btn.success { background: linear-gradient(135deg, var(--accent), #6ee7b7); color: #032b19; border: 0; }
       .switch { display: inline-flex; align-items: center; gap: 4px; padding: 6px; border: 1px solid var(--border); background: var(--chip); border-radius: 999px; }
       .switch button { width: 40px; height: 40px; border: 0; background: transparent; border-radius: 999px; color: var(--text); cursor: pointer; }
       .switch button.active { background: var(--card); box-shadow: inset 0 0 0 1px var(--border); }
@@ -189,6 +212,15 @@
       #zoomOverlay.open { display: flex; }
       #zoomOverlay img { max-width: min(90vw, 740px); max-height: 90vh; border-radius: 16px; border: 1px solid var(--border); }
 
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          animation-duration: 0.01ms !important;
+          animation-iteration-count: 1 !important;
+          transition-duration: 0.01ms !important;
+          scroll-behavior: auto !important;
+        }
+      }
+
       @media (max-width: 980px) {
         .grid { grid-template-columns: repeat(2, 1fr); }
         .filters { grid-template-columns: 1fr 1fr; }
@@ -214,12 +246,11 @@
               class="avatar"
               id="avatarImg"
               src="perfil.webp"
-              srcset="perfil@2x.webp 2x, perfil@3x.webp 3x"
-              sizes="(max-width:640px) 100px, 140px"
               loading="eager"
               decoding="async"
               fetchpriority="high"
               alt="Foto de perfil de David Fernandes"
+              tabindex="0"
             />
             <div>
               <h1>David Fernandes — Certificados & Certificações</h1>
@@ -228,7 +259,7 @@
           </div>
           <div class="toolbar">
             <div class="switch" role="group" aria-label="Tema">
-              <button id="btnLight" aria-label="Claro" title="Claro">
+              <button id="btnLight" aria-label="Claro" title="Claro" aria-pressed="false">
                 <svg class="icon sun" viewBox="0 0 24 24" aria-hidden="true">
                   <circle cx="12" cy="12" r="4"></circle>
                   <line x1="12" y1="2" x2="12" y2="5"></line>
@@ -241,7 +272,7 @@
                   <line x1="17.66" y1="6.34" x2="19.78" y2="4.22"></line>
                 </svg>
               </button>
-              <button id="btnDark" class="active" aria-label="Escuro" title="Escuro">
+              <button id="btnDark" class="active" aria-label="Escuro" title="Escuro" aria-pressed="true">
                 <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
                 </svg>
@@ -255,8 +286,10 @@
         <section class="stats" id="statsPanel" aria-label="Métricas"></section>
       </div>
 
-      <section class="filters">
+      <section class="filters" aria-label="Filtros">
+        <label class="sr-only" for="search">Buscar por título, emissor e habilidade</label>
         <input id="search" class="input" placeholder="Buscar por título, emissor, habilidade…" />
+        <label class="sr-only" for="filterCategory">Filtrar por categoria</label>
         <select id="filterCategory">
           <option value="">Categoria: todas</option>
           <option>Certificação</option>
@@ -264,7 +297,9 @@
           <option>Certificado</option>
           <option>Projeto</option>
         </select>
+        <label class="sr-only" for="filterIssuer">Filtrar por emissor</label>
         <select id="filterIssuer"><option value="">Emissor: todos</option></select>
+        <label class="sr-only" for="sortBy">Ordenação</label>
         <select id="sortBy">
           <option value="dateDesc">Mais recentes</option>
           <option value="dateAsc">Mais antigos</option>
@@ -277,8 +312,8 @@
       <footer>Construído em HTML/CSS/JS com animações Motion + GSAP e pronto para GitHub Pages.</footer>
     </div>
 
-    <div id="zoomOverlay" aria-hidden="true">
-      <img src="perfil.webp" srcset="perfil@2x.webp 2x, perfil@3x.webp 3x" alt="Foto ampliada de David Fernandes" />
+    <div id="zoomOverlay" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Foto ampliada de perfil" tabindex="-1">
+      <img src="perfil.webp" alt="Foto ampliada de David Fernandes" />
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
@@ -303,6 +338,9 @@
       const fIssuer = $("#filterIssuer");
       const sortBy = $("#sortBy");
       const statsPanel = $("#statsPanel");
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      let previousFocus = null;
+      let orbTweens = [];
 
       gsap.registerPlugin(ScrollTrigger);
 
@@ -316,19 +354,45 @@
         const ms = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
         return `${ms[(+m || 1) - 1]}/${y}`;
       };
-      const makeQR = (url) => url ? `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(url)}` : "";
+      const isSafeUrl = (value) => {
+        if (!value) return false;
+        try {
+          const u = new URL(value, window.location.origin);
+          return u.protocol === "https:";
+        } catch {
+          return false;
+        }
+      };
+      const makeQR = (url) => (isSafeUrl(url) ? `https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=${encodeURIComponent(url)}` : "");
 
       function setTheme(mode) {
-        if (mode === "light") {
+        const isLight = mode === "light";
+        if (isLight) {
           document.body.setAttribute("data-theme", "light");
-          $("#btnLight").classList.add("active");
-          $("#btnDark").classList.remove("active");
         } else {
           document.body.removeAttribute("data-theme");
-          $("#btnDark").classList.add("active");
-          $("#btnLight").classList.remove("active");
         }
-        localStorage.setItem("theme", mode);
+        $("#btnLight").classList.toggle("active", isLight);
+        $("#btnDark").classList.toggle("active", !isLight);
+        $("#btnLight").setAttribute("aria-pressed", String(isLight));
+        $("#btnDark").setAttribute("aria-pressed", String(!isLight));
+        localStorage.setItem("theme", isLight ? "light" : "dark");
+      }
+
+      function createStatCard(item, idx) {
+        const article = document.createElement("article");
+        article.className = "stat";
+        article.dataset.stat = String(idx);
+
+        const strong = document.createElement("strong");
+        strong.dataset.target = String(item.value);
+        strong.textContent = "0";
+
+        const span = document.createElement("span");
+        span.textContent = item.label;
+
+        article.append(strong, span);
+        return article;
       }
 
       function renderStats(list = CERTS) {
@@ -340,27 +404,26 @@
           { label: "Credenciais", value: list.length },
           { label: "Com verificação", value: valid },
           { label: "Emissores", value: issuers },
-          { label: `Última emissão (${fmtDate(newest) || "n/a"})`, value: skills }
+          { label: `Skills (${fmtDate(newest) || "n/a"})`, value: skills }
         ];
 
-        statsPanel.innerHTML = items.map((item, idx) => `
-          <article class="stat" data-stat="${idx}">
-            <strong data-target="${item.value}">0</strong>
-            <span>${item.label}</span>
-          </article>
-        `).join("");
+        statsPanel.replaceChildren(...items.map((item, idx) => createStatCard(item, idx)));
 
-        $$(".stat strong").forEach((el) => {
-          gsap.fromTo(el, { innerText: 0 }, {
-            innerText: Number(el.dataset.target),
-            duration: 1.4,
-            ease: "power2.out",
-            snap: { innerText: 1 },
-            onUpdate() { el.innerText = Math.round(el.innerText); }
+        if (!reducedMotion) {
+          $$(".stat strong").forEach((el) => {
+            gsap.fromTo(el, { innerText: 0 }, {
+              innerText: Number(el.dataset.target),
+              duration: 1.1,
+              ease: "power2.out",
+              snap: { innerText: 1 },
+              onUpdate() { el.innerText = String(Math.round(Number(el.innerText))); }
+            });
           });
-        });
 
-        animate(".stat", { opacity: [0, 1], y: [16, 0] }, { duration: .6, delay: stagger(.08), easing: "ease-out" });
+          animate(".stat", { opacity: [0, 1], y: [16, 0] }, { duration: .5, delay: stagger(.06), easing: "ease-out" });
+        } else {
+          $$(".stat strong").forEach((el) => { el.textContent = el.dataset.target || "0"; });
+        }
       }
 
       function populateIssuerFilter() {
@@ -375,37 +438,142 @@
 
       const hit = (cert, term) => `${cert.title} ${cert.issuer} ${(cert.skills || []).join(" ")}`.toLowerCase().includes(term);
 
-      function attachCardPhysics() {
-        $$(".card").forEach((card) => {
-          const rotX = gsap.quickTo(card, "rotateX", { duration: .35, ease: "power3" });
-          const rotY = gsap.quickTo(card, "rotateY", { duration: .35, ease: "power3" });
-          const z = gsap.quickTo(card, "z", { duration: .35, ease: "power3" });
+      function createImage(className, src, alt) {
+        if (!isSafeUrl(src)) return null;
+        const img = document.createElement("img");
+        img.className = className;
+        img.src = src;
+        img.alt = alt;
+        img.loading = "lazy";
+        return img;
+      }
 
-          card.addEventListener("mousemove", (e) => {
-            const r = card.getBoundingClientRect();
-            const x = (e.clientX - r.left) / r.width - .5;
-            const y = (e.clientY - r.top) / r.height - .5;
-            rotX(-y * 10);
-            rotY(x * 10);
-            z(35);
-          });
-          card.addEventListener("mouseleave", () => {
-            rotX(0);
-            rotY(0);
-            z(0);
-          });
+      function createLink(className, href, text) {
+        if (!isSafeUrl(href)) return null;
+        const a = document.createElement("a");
+        a.className = className;
+        a.href = href;
+        a.target = "_blank";
+        a.rel = "noopener";
+        a.textContent = text;
+        return a;
+      }
 
-          gsap.from(card, {
-            opacity: 0,
-            y: 50,
-            duration: .8,
-            ease: "power3.out",
-            scrollTrigger: { trigger: card, start: "top 88%" }
-          });
+      function attachCardPhysics(card) {
+        if (reducedMotion) return;
+        const rotX = gsap.quickTo(card, "rotateX", { duration: .35, ease: "power3" });
+        const rotY = gsap.quickTo(card, "rotateY", { duration: .35, ease: "power3" });
+        const z = gsap.quickTo(card, "z", { duration: .35, ease: "power3" });
+
+        card.addEventListener("mousemove", (e) => {
+          const r = card.getBoundingClientRect();
+          const x = (e.clientX - r.left) / r.width - .5;
+          const y = (e.clientY - r.top) / r.height - .5;
+          rotX(-y * 10);
+          rotY(x * 10);
+          z(35);
+        });
+        card.addEventListener("mouseleave", () => {
+          rotX(0);
+          rotY(0);
+          z(0);
+        });
+
+        gsap.from(card, {
+          opacity: 0,
+          y: 50,
+          duration: .8,
+          ease: "power3.out",
+          scrollTrigger: { trigger: card, start: "top 88%" }
         });
       }
 
+      function clearScrollTriggers() {
+        ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+      }
+
+      function renderEmptyState() {
+        const card = document.createElement("div");
+        card.className = "card";
+        const strong = document.createElement("strong");
+        strong.textContent = "Nenhum item encontrado.";
+        const p = document.createElement("p");
+        p.className = "meta";
+        p.textContent = "Ajuste os filtros ou pesquise por outro termo.";
+        card.append(strong, p);
+        grid.replaceChildren(card);
+      }
+
+      function renderCard(c) {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const head = document.createElement("div");
+        head.className = "card-head";
+        const left = document.createElement("div");
+        left.className = "left";
+        const right = document.createElement("div");
+        right.className = "right";
+
+        const badge = createImage("badge", c.badgeUrl, "Badge");
+        if (badge) left.appendChild(badge);
+
+        const textWrap = document.createElement("div");
+        const title = document.createElement("h3");
+        title.className = "titleCert";
+        title.textContent = c.title || "Título indisponível";
+
+        const issuer = document.createElement("div");
+        issuer.className = "issuer";
+        const logo = createImage("logo", c.logoUrl, "Logo");
+        if (logo) issuer.appendChild(logo);
+        const issuerName = document.createElement("span");
+        issuerName.textContent = c.issuer || "—";
+        issuer.appendChild(issuerName);
+
+        const meta = document.createElement("div");
+        meta.className = "meta";
+        const parts = [];
+        if (fmtDate(c.issueDate)) parts.push(`Emitido: ${fmtDate(c.issueDate)}`);
+        if (fmtDate(c.expireDate)) parts.push(`Expira: ${fmtDate(c.expireDate)}`);
+        if (c.id) parts.push(`ID: ${c.id}`);
+        meta.textContent = parts.join(" • ");
+
+        textWrap.append(title, issuer, meta);
+        left.appendChild(textWrap);
+
+        const qr = createImage("qr", makeQR(c.verifyUrl), "QR de verificação");
+        if (qr) right.appendChild(qr);
+
+        head.append(left, right);
+        card.appendChild(head);
+
+        if (c.skills?.length) {
+          const chips = document.createElement("div");
+          chips.className = "chips";
+          c.skills.forEach((s) => {
+            const chip = document.createElement("span");
+            chip.className = "chip";
+            chip.textContent = s;
+            chips.appendChild(chip);
+          });
+          card.appendChild(chips);
+        }
+
+        const actions = document.createElement("div");
+        actions.className = "card-actions";
+        const verifyLink = createLink("verify primary", c.verifyUrl, "Verificar credencial");
+        const badgeLink = createLink("verify", c.badgeUrl, "Abrir badge");
+        if (verifyLink) actions.appendChild(verifyLink);
+        if (badgeLink) actions.appendChild(badgeLink);
+        card.appendChild(actions);
+
+        attachCardPhysics(card);
+        return card;
+      }
+
       function render() {
+        clearScrollTriggers();
         let list = [...CERTS];
         const term = (search.value || "").trim().toLowerCase();
         if (term) list = list.filter((c) => hit(c, term));
@@ -414,52 +582,36 @@
         const sorter = ({ dateDesc: byDateDesc, dateAsc: byDateAsc, titleAsc: byTitleAsc }[sortBy.value]) || byDateDesc;
         list.sort(sorter);
 
-        grid.innerHTML = "";
         if (!list.length) {
-          grid.innerHTML = `<div class="card"><strong>Nenhum item encontrado.</strong> Ajuste os filtros ou pesquise por outro termo.</div>`;
+          renderEmptyState();
           return;
         }
 
-        list.forEach((c) => {
-          const card = document.createElement("article");
-          card.className = "card";
-          card.innerHTML = `
-            <div class="card-head">
-              <div class="left">
-                ${c.badgeUrl ? `<img class="badge" src="${c.badgeUrl}" alt="Badge"/>` : ""}
-                <div>
-                  <h3 class="titleCert">${c.title}</h3>
-                  <div class="issuer">${c.logoUrl ? `<img class="logo" src="${c.logoUrl}" alt="Logo"/>` : ""}<span>${c.issuer || "—"}</span></div>
-                  <div class="meta">${fmtDate(c.issueDate) ? `Emitido: ${fmtDate(c.issueDate)}` : ""}${fmtDate(c.expireDate) ? ` • Expira: ${fmtDate(c.expireDate)}` : ""}${c.id ? ` • ID: ${c.id}` : ""}</div>
-                </div>
-              </div>
-              <div class="right">${c.verifyUrl ? `<img class="qr" src="${makeQR(c.verifyUrl)}" alt="QR de verificação"/>` : ""}</div>
-            </div>
-            ${c.skills?.length ? `<div class="chips">${c.skills.map((s) => `<span class="chip">${s}</span>`).join("")}</div>` : ""}
-            <div class="card-actions">
-              ${c.verifyUrl ? `<a class="verify primary" href="${c.verifyUrl}" target="_blank" rel="noopener">Verificar credencial</a>` : ""}
-              ${c.badgeUrl ? `<a class="verify" href="${c.badgeUrl}" target="_blank" rel="noopener">Abrir badge</a>` : ""}
-            </div>
-          `;
-          grid.appendChild(card);
-        });
+        const cards = list.map((c) => renderCard(c));
+        grid.replaceChildren(...cards);
 
-        animate(".card .chip", { opacity: [0, 1], scale: [.9, 1] }, { duration: .35, delay: stagger(.04), easing: "ease-out" });
-        attachCardPhysics();
+        if (!reducedMotion) {
+          animate(".card .chip", { opacity: [0, 1], scale: [.9, 1] }, { duration: .35, delay: stagger(.04), easing: "ease-out" });
+        }
         renderStats(list);
       }
 
       function addMicroInteractions() {
-        animate(".hero", { opacity: [0, 1], y: [28, 0] }, { duration: .8, easing: "ease-out" });
-        animate(".filters", { opacity: [0, 1], y: [20, 0] }, { duration: .75, delay: .14, easing: "ease-out" });
-        gsap.to(".orb.one", { x: 80, y: 34, duration: 10, yoyo: true, repeat: -1, ease: "sine.inOut" });
-        gsap.to(".orb.two", { x: -70, y: -25, duration: 11, yoyo: true, repeat: -1, ease: "sine.inOut" });
-        gsap.to(".orb.three", { x: -38, y: -56, duration: 9, yoyo: true, repeat: -1, ease: "sine.inOut" });
+        if (!reducedMotion) {
+          animate(".hero", { opacity: [0, 1], y: [28, 0] }, { duration: .8, easing: "ease-out" });
+          animate(".filters", { opacity: [0, 1], y: [20, 0] }, { duration: .75, delay: .14, easing: "ease-out" });
+          orbTweens = [
+            gsap.to(".orb.one", { x: 80, y: 34, duration: 10, yoyo: true, repeat: -1, ease: "sine.inOut" }),
+            gsap.to(".orb.two", { x: -70, y: -25, duration: 11, yoyo: true, repeat: -1, ease: "sine.inOut" }),
+            gsap.to(".orb.three", { x: -38, y: -56, duration: 9, yoyo: true, repeat: -1, ease: "sine.inOut" })
+          ];
+        }
 
         $$(".btn, .verify").forEach((el) => {
           const xTo = gsap.quickTo(el, "x", { duration: .25, ease: "power2.out" });
           const yTo = gsap.quickTo(el, "y", { duration: .25, ease: "power2.out" });
           el.addEventListener("mousemove", (e) => {
+            if (reducedMotion) return;
             const r = el.getBoundingClientRect();
             xTo((e.clientX - (r.left + r.width / 2)) * .12);
             yTo((e.clientY - (r.top + r.height / 2)) * .12);
@@ -470,21 +622,34 @@
 
       const avatarImg = $("#avatarImg");
       const zoomOverlay = $("#zoomOverlay");
-      avatarImg.addEventListener("click", () => {
+      function closeDialog() {
+        zoomOverlay.classList.remove("open");
+        zoomOverlay.setAttribute("aria-hidden", "true");
+        if (previousFocus) previousFocus.focus();
+      }
+      function openDialog() {
+        previousFocus = document.activeElement;
         zoomOverlay.classList.add("open");
         zoomOverlay.setAttribute("aria-hidden", "false");
-        animate("#zoomOverlay img", { scale: [.92, 1], opacity: [.4, 1] }, { duration: .35, easing: "ease-out" });
-      });
-      zoomOverlay.addEventListener("click", (e) => {
-        if (e.target === zoomOverlay) {
-          zoomOverlay.classList.remove("open");
-          zoomOverlay.setAttribute("aria-hidden", "true");
+        zoomOverlay.focus();
+        if (!reducedMotion) animate("#zoomOverlay img", { scale: [.92, 1], opacity: [.4, 1] }, { duration: .35, easing: "ease-out" });
+      }
+
+      avatarImg.addEventListener("click", openDialog);
+      avatarImg.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          openDialog();
         }
       });
+
+      zoomOverlay.addEventListener("click", (e) => {
+        if (e.target === zoomOverlay) closeDialog();
+      });
+
       document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          zoomOverlay.classList.remove("open");
-          zoomOverlay.setAttribute("aria-hidden", "true");
+        if (e.key === "Escape" && zoomOverlay.classList.contains("open")) {
+          closeDialog();
         }
       });
 
@@ -493,9 +658,9 @@
       $("#btnPrint").addEventListener("click", () => window.print());
       [search, fCat, fIssuer, sortBy].forEach((el) => el.addEventListener("input", render));
 
-      const LINKEDIN = "";
+      const LINKEDIN = "https://www.linkedin.com/in/david-fernandes-08b005b4/";
       const btnLinkedIn = $("#btnLinkedIn");
-      if (!LINKEDIN) btnLinkedIn.classList.add("hidden"); else btnLinkedIn.href = LINKEDIN;
+      if (!isSafeUrl(LINKEDIN)) btnLinkedIn.classList.add("hidden"); else btnLinkedIn.href = LINKEDIN;
 
       (function init() {
         const saved = localStorage.getItem("theme");
