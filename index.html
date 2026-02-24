@@ -181,6 +181,7 @@
       .stat strong { display: block; font-size: 1.34rem; }
       .stat span { color: var(--muted); font-size: .85rem; }
 
+
       .filters {
         display: grid;
         grid-template-columns: 1fr 190px 180px auto;
@@ -219,6 +220,13 @@
       .chips { display: flex; flex-wrap: wrap; gap: 8px; }
       .chip { font-size: .74rem; padding: 6px 10px; border-radius: 999px; background: var(--chip); border: 1px solid var(--border); color: var(--muted); }
       .card-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+      .card-docs {
+        margin: 4px 0 0;
+        padding-left: 18px;
+        color: var(--muted);
+        font-size: .86rem;
+      }
+      .card-docs a { color: var(--brand-2); }
       .verify {
         padding: 9px 12px;
         border-radius: 12px;
@@ -313,16 +321,17 @@
         <section class="stats" id="statsPanel" aria-label="Métricas"></section>
       </div>
 
+
       <section class="filters" aria-label="Filtros">
         <label class="sr-only" for="search">Buscar por título, emissor e habilidade</label>
         <input id="search" class="input" placeholder="Buscar por título, emissor, habilidade…" />
         <label class="sr-only" for="filterCategory">Filtrar por categoria</label>
         <select id="filterCategory">
           <option value="">Categoria: todas</option>
-          <option>Certificação</option>
-          <option>Diploma</option>
-          <option>Certificado</option>
-          <option>Projeto</option>
+          <option>Certificações</option>
+          <option>Graduações</option>
+          <option>MBA</option>
+          <option>Pós-Graduação</option>
         </select>
         <label class="sr-only" for="filterIssuer">Filtrar por emissor</label>
         <select id="filterIssuer"><option value="">Emissor: todos</option></select>
@@ -349,12 +358,19 @@
       import { animate, stagger, spring } from "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm";
 
       const CERTS = [
-        { id: "AZ-204-EXEMPLO", title: "AZ-204: Developing Solutions for Microsoft Azure", issuer: "Microsoft", category: "Certificação", issueDate: "2025-03", expireDate: "", verifyUrl: "https://www.credly.com/badges/SEU-ID", badgeUrl: "https://images.credly.com/size/340x340/images/abc123.png", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", skills: ["Azure", "APIs", "Functions", "DevOps"] },
-        { id: "AZ-900-EXEMPLO", title: "AZ-900: Microsoft Azure Fundamentals", issuer: "Microsoft", category: "Certificação", issueDate: "2025-01", expireDate: "", verifyUrl: "https://www.credly.com/badges/SEU-ID", badgeUrl: "", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", skills: ["Cloud", "Azure", "Fundamentals"] },
-        { id: "SC-900-EXEMPLO", title: "SC-900: Security, Compliance, and Identity Fundamentals", issuer: "Microsoft", category: "Certificação", issueDate: "2025-02", expireDate: "", verifyUrl: "", badgeUrl: "", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", skills: ["Security", "Identity", "Compliance"] },
-        { id: "DIP-ADS-001", title: "Tecnólogo em Análise e Desenvolvimento de Sistemas", issuer: "USJT - Universidade São Judas Tadeu", category: "Diploma", issueDate: "2023-12", expireDate: "", verifyUrl: "https://portal.sua-faculdade.br/verificar/XYZ", badgeUrl: "", logoUrl: "", skills: ["Java", "Arquitetura", "Bancos de Dados"] },
-        { id: "ALURA-ARQ-2024", title: "Arquitetura de Software Moderna", issuer: "Alura", category: "Certificado", issueDate: "2024-08", expireDate: "", verifyUrl: "https://www.alura.com.br", badgeUrl: "", logoUrl: "", skills: ["DDD", "Clean Architecture"] },
-        { id: "UDEMY-FULLSTACK", title: "Formação Full Stack Java + React", issuer: "Udemy", category: "Certificado", issueDate: "2024-11", expireDate: "", verifyUrl: "https://www.udemy.com", badgeUrl: "", logoUrl: "", skills: ["Java", "React", "APIs"] }
+        { id: "CERT-AZ-900", title: "Microsoft Certified: Conceitos básicos do Azure", issuer: "Microsoft", category: "Certificações", issueDate: "2025-11", expireDate: "", verifyUrl: "https://www.credly.com/badges/SEU-ID", badgeUrl: "", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", skills: ["AZ-900", "Cloud", "Fundamentals"], docs: [
+          { label: "Documento da certificação", url: "https://www.credly.com/badges/SEU-ID" }
+        ] },
+        { id: "GRAD-CC-USJT", title: "Bacharelado em Ciência da Computação", issuer: "Universidade São Judas", category: "Graduações", issueDate: "2024-02", expireDate: "", verifyUrl: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea", badgeUrl: "", logoUrl: "", skills: ["Bacharelado", "Computação"], docs: [
+          { label: "Diploma digital (frente)", url: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea" },
+          { label: "Diploma digital (verso)", url: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea" }
+        ] },
+        { id: "MBA-FBR-2024", title: "MBA em Arquitetura Full Cycle", issuer: "Faculdade Brasília - FBr", category: "MBA", issueDate: "2024-12", expireDate: "", verifyUrl: "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx", badgeUrl: "", logoUrl: "", skills: ["Arquitetura", "Full Cycle"], docs: [
+          { label: "Certificado MBA (frente)", url: "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx" }
+        ] },
+        { id: "POS-FBR-712", title: "Pós-Graduação Lato Sensu - Especialista", issuer: "Faculdade Brasília - FBr", category: "Pós-Graduação", issueDate: "2025-06", expireDate: "", verifyUrl: "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx", badgeUrl: "", logoUrl: "", skills: ["Lato Sensu", "Especialização"], docs: [
+          { label: "Registro da Pós-Graduação (verso)", url: "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx" }
+        ] }
       ];
 
       const $ = (s, el = document) => el.querySelector(s);
@@ -596,6 +612,18 @@
             chips.appendChild(chip);
           });
           card.appendChild(chips);
+        }
+
+        if (c.docs?.length) {
+          const docs = document.createElement("ul");
+          docs.className = "card-docs";
+          c.docs.forEach((d) => {
+            const item = document.createElement("li");
+            const link = createLink("", d.url, d.label || "Documento");
+            if (link) item.appendChild(link);
+            docs.appendChild(item);
+          });
+          card.appendChild(docs);
         }
 
         const actions = document.createElement("div");
