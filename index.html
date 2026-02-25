@@ -380,9 +380,11 @@
       import { animate, stagger, spring } from "https://cdn.jsdelivr.net/npm/motion@11.11.13/+esm";
 
       const CERTS = [
-        { id: "CERT-AZ-900", title: "Microsoft Certified: Conceitos básicos do Azure", issuer: "Microsoft", category: "Certificações", issueDate: "2025-11", expireDate: "", verifyUrl: "https://www.credly.com/badges/SEU-ID", badgeUrl: "", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", skills: ["AZ-900", "Cloud", "Fundamentals"], docs: [
-          { label: "Documento da certificação", url: "https://www.credly.com/badges/SEU-ID" }
+        { id: "CERT-AZ-900", title: "Microsoft Certified: Conceitos básicos do Azure", issuer: "Microsoft", category: "Certificações", issueDate: "2025-11", expireDate: "", verifyUrl: "", badgeUrl: "", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", skills: ["AZ-900", "Cloud", "Fundamentals"], docs: [
+          { label: "Documento da certificação", url: "" }
         ] },
+        { id: "GRAD-ES-USP-ESALQ", title: "Engenharia de Software (cursando)", issuer: "USP/ESALQ", category: "Graduações", issueDate: "2025-01", expireDate: "", verifyUrl: "", badgeUrl: "", logoUrl: "", skills: ["Graduação", "Engenharia de Software"], docs: [] },
+        { id: "POS-DS-FIAP", title: "Pós-graduação em Desenvolvimento de Software (cursando)", issuer: "FIAP", category: "Pós-Graduação", issueDate: "2025-01", expireDate: "", verifyUrl: "", badgeUrl: "", logoUrl: "", skills: ["Pós-Graduação", "Desenvolvimento de Software"], docs: [] },
         { id: "GRAD-CC-USJT", title: "Bacharelado em Ciência da Computação", issuer: "Universidade São Judas", category: "Graduações", issueDate: "2024-02", expireDate: "", verifyUrl: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea", badgeUrl: "", logoUrl: "", skills: ["Bacharelado", "Computação"], docs: [
           { label: "Diploma digital (frente)", url: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea" },
           { label: "Diploma digital (verso)", url: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea" }
@@ -423,8 +425,10 @@
       };
       const isSafeUrl = (value) => {
         if (!value) return false;
+        const trimmed = String(value).trim();
+        if (!trimmed || /SEU-ID|SEU_LINK|example\.com/i.test(trimmed)) return false;
         try {
-          const u = new URL(value, window.location.origin);
+          const u = new URL(trimmed, window.location.origin);
           return u.protocol === "https:";
         } catch {
           return false;
@@ -463,7 +467,7 @@
       }
 
       function renderStats(list = CERTS) {
-        const valid = list.filter((c) => !!c.verifyUrl).length;
+        const valid = list.filter((c) => isSafeUrl(c.verifyUrl)).length;
         const issuers = unique(list.map((c) => c.issuer).filter(Boolean)).length;
         const skills = unique(list.flatMap((c) => c.skills || [])).length;
         const newest = [...list].sort(byDateDesc)[0]?.issueDate || "";
@@ -640,12 +644,13 @@
           const docs = document.createElement("ul");
           docs.className = "card-docs";
           c.docs.forEach((d) => {
-            const item = document.createElement("li");
             const link = createLink("", d.url, d.label || "Documento");
-            if (link) item.appendChild(link);
+            if (!link) return;
+            const item = document.createElement("li");
+            item.appendChild(link);
             docs.appendChild(item);
           });
-          card.appendChild(docs);
+          if (docs.children.length) card.appendChild(docs);
         }
 
         const actions = document.createElement("div");
