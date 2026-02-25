@@ -145,7 +145,18 @@
         box-shadow: var(--shadow);
         cursor: zoom-in;
       }
-      h1 { font-size: 1.65rem; margin: 0; }
+      h1 {
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+        font-size: 1.65rem;
+      }
+      .capelo {
+        font-size: 2.15rem;
+        line-height: 1;
+      }
       .subtitle { margin: 6px 0 0 0; color: var(--muted); max-width: 52ch; }
       .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
       .btn {
@@ -305,7 +316,11 @@
               tabindex="0"
             />
             <div>
-              <h1>David Fernandes — Certificados & Certificações</h1>
+              <h1>
+                David Fernandes
+                <span class="capelo" aria-hidden="true">🎓</span>
+                Certificados &amp; Certificações
+              </h1>
               <p class="subtitle">Portfólio verificável com microinterações avançadas em Motion + GSAP, focado em uma experiência fluida e realista.</p>
             </div>
           </div>
