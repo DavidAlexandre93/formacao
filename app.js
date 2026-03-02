@@ -69,6 +69,11 @@ function createImage(className, src, alt) {
   return img;
 }
 
+function getPrimaryDocImage(cert) {
+  if (!Array.isArray(cert.docs)) return null;
+  return cert.docs.find((doc) => doc?.imagePath && VALID_DOC_IMAGE.test(doc.imagePath)) || null;
+}
+
 function openModal(modal, focusEl) {
   previousFocus = focusEl || document.activeElement;
   activeModal = modal;
@@ -153,14 +158,7 @@ function createCard(cert) {
     const ul = document.createElement("ul");
     cert.docs.forEach((doc) => {
       const li = document.createElement("li");
-      if (doc.imagePath && VALID_DOC_IMAGE.test(doc.imagePath)) {
-        const btn = document.createElement("button");
-        btn.className = "btn";
-        btn.textContent = safeText(doc.label, "Ver certificado");
-        btn.dataset.docImagePath = doc.imagePath;
-        btn.dataset.docTitle = safeText(doc.label, cert.title);
-        li.appendChild(btn);
-      } else {
+      if (!(doc.imagePath && VALID_DOC_IMAGE.test(doc.imagePath))) {
         const docLink = createLink("", doc.url, safeText(doc.label, "Documento"));
         if (docLink) li.appendChild(docLink);
       }
@@ -171,7 +169,17 @@ function createCard(cert) {
 
   const actions = document.createElement("div");
   actions.className = "card-actions";
-  const verify = createLink("verify primary", cert.verifyUrl, "Verificar credencial");
+  const primaryDocImage = getPrimaryDocImage(cert);
+  let verify = null;
+  if (primaryDocImage) {
+    verify = document.createElement("button");
+    verify.className = "verify primary btn";
+    verify.textContent = "Ver certificado aqui";
+    verify.dataset.docImagePath = primaryDocImage.imagePath;
+    verify.dataset.docTitle = safeText(primaryDocImage.label, cert.title);
+  } else {
+    verify = createLink("verify primary", cert.verifyUrl, "Verificar credencial");
+  }
   const badgeLink = createLink("verify", cert.badgeUrl, "Abrir badge");
   if (verify) actions.appendChild(verify);
   if (badgeLink) actions.appendChild(badgeLink);
