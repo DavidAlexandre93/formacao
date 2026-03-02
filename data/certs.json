@@ -1,0 +1,75 @@
+[
+  {
+    "id": "CERT-AZ-900",
+    "title": "Microsoft Certified: Conceitos básicos do Azure",
+    "issuer": "Microsoft",
+    "category": "Certificações",
+    "issueDate": "2025-11",
+    "expireDate": "",
+    "verifyUrl": "",
+    "badgeUrl": "",
+    "logoUrl": "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg",
+    "skills": ["AZ-900", "Cloud", "Fundamentals"],
+    "docs": [
+      { "label": "Ver certificado", "imagePath": "img/certificacao-az-900.png" }
+    ]
+  },
+  {
+    "id": "GRAD-ES-USP-ESALQ",
+    "title": "Engenharia de Software (cursando)",
+    "issuer": "USP/ESALQ",
+    "category": "Graduações",
+    "issueDate": "2025-01",
+    "expireDate": "",
+    "verifyUrl": "",
+    "badgeUrl": "",
+    "logoUrl": "",
+    "skills": ["Graduação", "Engenharia de Software"],
+    "docs": []
+  },
+  {
+    "id": "POS-DS-FIAP",
+    "title": "Pós-graduação em Desenvolvimento de Software (cursando)",
+    "issuer": "FIAP",
+    "category": "Pós-Graduação",
+    "issueDate": "2025-01",
+    "expireDate": "",
+    "verifyUrl": "",
+    "badgeUrl": "",
+    "logoUrl": "",
+    "skills": ["Pós-Graduação", "Desenvolvimento de Software"],
+    "docs": []
+  },
+  {
+    "id": "GRAD-CC-USJT",
+    "title": "Bacharelado em Ciência da Computação",
+    "issuer": "Universidade São Judas",
+    "category": "Graduações",
+    "issueDate": "2024-02",
+    "expireDate": "",
+    "verifyUrl": "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea",
+    "badgeUrl": "",
+    "logoUrl": "",
+    "skills": ["Bacharelado", "Computação"],
+    "docs": [
+      { "label": "Ver certificado", "imagePath": "img/graduacao.png" },
+      { "label": "Validação digital", "url": "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea" }
+    ]
+  },
+  {
+    "id": "MBA-FBR-2024",
+    "title": "MBA em Arquitetura Full Cycle",
+    "issuer": "Faculdade Brasília - FBr",
+    "category": "MBA",
+    "issueDate": "2024-12",
+    "expireDate": "",
+    "verifyUrl": "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx",
+    "badgeUrl": "",
+    "logoUrl": "",
+    "skills": ["Arquitetura", "Full Cycle"],
+    "docs": [
+      { "label": "Ver certificado", "imagePath": "img/mba-arquitetura-software.png" },
+      { "label": "Validação digital", "url": "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx" }
+    ]
+  }
+]

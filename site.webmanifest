@@ -1,0 +1,15 @@
+{
+  "name": "Certificados - David Alexandre Fernandes",
+  "short_name": "Certificados",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#05070d",
+  "theme_color": "#05070d",
+  "icons": [
+    {
+      "src": "perfil.webp",
+      "sizes": "512x512",
+      "type": "image/webp"
+    }
+  ]
+}
