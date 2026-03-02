@@ -71,6 +71,7 @@
     "docs": [
       { "label": "Ver certificado", "imagePath": "img/mba-arquitetura-software.png" },
       { "label": "Validação digital", "url": "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx" }
-    ]
+    ],
+    "qrCodeUrl": "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https%3A%2F%2Fwww.unicollege.com.br%2Fu%2Fo%2Fi%2Fo03%2FValidador.aspx"
   }
 ]
