@@ -133,10 +133,14 @@ function createCard(cert) {
   left.appendChild(textWrap);
 
   if (isSafeUrl(cert.verifyUrl)) {
-    const qrFallback = document.createElement("div");
-    qrFallback.className = "qr-placeholder";
-    qrFallback.textContent = "QR local habilitado via build";
-    right.appendChild(qrFallback);
+    const qrImage = createImage("qr-code", cert.qrCodeUrl, `QR Code de verificação de ${safeText(cert.title, "credencial")}`);
+    if (qrImage) right.appendChild(qrImage);
+    else {
+      const qrFallback = document.createElement("div");
+      qrFallback.className = "qr-placeholder";
+      qrFallback.textContent = "QR indisponível";
+      right.appendChild(qrFallback);
+    }
   }
 
   head.append(left, right);

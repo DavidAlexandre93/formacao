@@ -54,7 +54,8 @@
     "docs": [
       { "label": "Ver certificado", "imagePath": "img/graduacao.png" },
       { "label": "Validação digital", "url": "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea" }
-    ]
+    ],
+    "qrCodeUrl": "https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=https%3A%2F%2Fdiplomadigital.usjt.br%2F%3Fcodigo%3D203.203.6fb7ca2c25ea"
   },
   {
     "id": "MBA-FBR-2024",
