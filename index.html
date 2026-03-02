@@ -274,6 +274,21 @@
       #zoomOverlay.open { display: flex; }
       #zoomOverlay img { max-width: min(90vw, 740px); max-height: 90vh; border-radius: 16px; border: 1px solid var(--border); }
 
+      #certModal { position: fixed; inset: 0; display: none; align-items: center; justify-content: center; background: rgba(4, 8, 18, .82); z-index: 10000; padding: 20px; }
+      #certModal.open { display: flex; }
+      #certModal figure {
+        margin: 0;
+        max-width: min(94vw, 980px);
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 16px;
+        background: var(--card);
+        box-shadow: var(--shadow);
+        padding: 14px;
+      }
+      #certModal img { width: 100%; height: auto; max-height: 78vh; object-fit: contain; border-radius: 10px; border: 1px solid var(--border); background: #fff; }
+      #certModal figcaption { margin-top: 10px; color: var(--muted); font-size: .92rem; }
+
       @media (prefers-reduced-motion: reduce) {
         *, *::before, *::after {
           animation-duration: 0.01ms !important;
@@ -388,6 +403,13 @@
       <img src="perfil.webp" alt="Foto ampliada de David Alexandre Fernandes" />
     </div>
 
+    <div id="certModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Visualização do certificado" tabindex="-1">
+      <figure>
+        <img id="certModalImg" src="" alt="" />
+        <figcaption id="certModalCaption"></figcaption>
+      </figure>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
     <script type="module">
@@ -395,16 +417,17 @@
 
       const CERTS = [
         { id: "CERT-AZ-900", title: "Microsoft Certified: Conceitos básicos do Azure", issuer: "Microsoft", category: "Certificações", issueDate: "2025-11", expireDate: "", verifyUrl: "", badgeUrl: "", logoUrl: "https://upload.wikimedia.org/wikipedia/commons/4/44/Microsoft_logo.svg", skills: ["AZ-900", "Cloud", "Fundamentals"], docs: [
-          { label: "Documento da certificação", url: "" }
+          { label: "Ver certificado", imagePath: "img/certificacao-az-900.png" }
         ] },
         { id: "GRAD-ES-USP-ESALQ", title: "Engenharia de Software (cursando)", issuer: "USP/ESALQ", category: "Graduações", issueDate: "2025-01", expireDate: "", verifyUrl: "", badgeUrl: "", logoUrl: "", skills: ["Graduação", "Engenharia de Software"], docs: [] },
         { id: "POS-DS-FIAP", title: "Pós-graduação em Desenvolvimento de Software (cursando)", issuer: "FIAP", category: "Pós-Graduação", issueDate: "2025-01", expireDate: "", verifyUrl: "", badgeUrl: "", logoUrl: "", skills: ["Pós-Graduação", "Desenvolvimento de Software"], docs: [] },
         { id: "GRAD-CC-USJT", title: "Bacharelado em Ciência da Computação", issuer: "Universidade São Judas", category: "Graduações", issueDate: "2024-02", expireDate: "", verifyUrl: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea", badgeUrl: "", logoUrl: "", skills: ["Bacharelado", "Computação"], docs: [
-          { label: "Diploma digital (frente)", url: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea" },
-          { label: "Diploma digital (verso)", url: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea" }
+          { label: "Ver certificado", imagePath: "img/graduacao.png" },
+          { label: "Validação digital", url: "https://diplomadigital.usjt.br/?codigo=203.203.6fb7ca2c25ea" }
         ] },
         { id: "MBA-FBR-2024", title: "MBA em Arquitetura Full Cycle", issuer: "Faculdade Brasília - FBr", category: "MBA", issueDate: "2024-12", expireDate: "", verifyUrl: "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx", badgeUrl: "", logoUrl: "", skills: ["Arquitetura", "Full Cycle"], docs: [
-          { label: "Certificado MBA (frente)", url: "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx" }
+          { label: "Ver certificado", imagePath: "img/mba-arquitetura-software.png" },
+          { label: "Validação digital", url: "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx" }
         ] },
         { id: "POS-FBR-712", title: "Pós-Graduação Lato Sensu - Especialista", issuer: "Faculdade Brasília - FBr", category: "Pós-Graduação", issueDate: "2025-06", expireDate: "", verifyUrl: "https://www.unicollege.com.br/u/o/i/o03/Validador.aspx", badgeUrl: "", logoUrl: "", skills: ["Lato Sensu", "Especialização"], docs: [] }
       ];
@@ -552,6 +575,26 @@
         return a;
       }
 
+      function isSafeLocalImage(path) {
+        if (!path) return false;
+        const normalized = String(path).trim();
+        return /^img\/[a-z0-9._\-/]+$/i.test(normalized);
+      }
+
+      function createDocLink(doc, certTitle) {
+        if (isSafeLocalImage(doc.imagePath)) {
+          const a = document.createElement("a");
+          a.href = "#";
+          a.textContent = doc.label || "Ver certificado";
+          a.addEventListener("click", (event) => {
+            event.preventDefault();
+            openCertModal(doc.imagePath, doc.label || certTitle || "Certificado");
+          });
+          return a;
+        }
+        return createLink("", doc.url, doc.label || "Documento");
+      }
+
       function attachCardPhysics(card) {
         if (reducedMotion) return;
         const rotX = gsap.quickTo(card, "rotateX", { duration: .35, ease: "power3" });
@@ -666,7 +709,7 @@
           const docs = document.createElement("ul");
           docs.className = "card-docs";
           c.docs.forEach((d) => {
-            const link = createLink("", d.url, d.label || "Documento");
+            const link = createDocLink(d, c.title);
             if (!link) return;
             const item = document.createElement("li");
             item.appendChild(link);
@@ -786,6 +829,9 @@
 
       const avatarImg = $("#avatarImg");
       const zoomOverlay = $("#zoomOverlay");
+      const certModal = $("#certModal");
+      const certModalImg = $("#certModalImg");
+      const certModalCaption = $("#certModalCaption");
       function closeDialog() {
         zoomOverlay.classList.remove("open");
         zoomOverlay.setAttribute("aria-hidden", "true");
@@ -797,6 +843,23 @@
         zoomOverlay.setAttribute("aria-hidden", "false");
         zoomOverlay.focus();
         if (!reducedMotion) animate("#zoomOverlay img", { scale: [.92, 1], opacity: [.4, 1] }, { duration: .35, easing: "ease-out" });
+      }
+
+      function closeCertModal() {
+        certModal.classList.remove("open");
+        certModal.setAttribute("aria-hidden", "true");
+        certModalImg.src = "";
+        if (previousFocus) previousFocus.focus();
+      }
+
+      function openCertModal(imagePath, title) {
+        previousFocus = document.activeElement;
+        certModalImg.src = imagePath;
+        certModalImg.alt = title;
+        certModalCaption.textContent = title;
+        certModal.classList.add("open");
+        certModal.setAttribute("aria-hidden", "false");
+        certModal.focus();
       }
 
       avatarImg.addEventListener("click", openDialog);
@@ -811,9 +874,16 @@
         if (e.target === zoomOverlay) closeDialog();
       });
 
+      certModal.addEventListener("click", (e) => {
+        if (e.target === certModal) closeCertModal();
+      });
+
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape" && zoomOverlay.classList.contains("open")) {
           closeDialog();
+        }
+        if (e.key === "Escape" && certModal.classList.contains("open")) {
+          closeCertModal();
         }
       });
 
