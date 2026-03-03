@@ -195,20 +195,29 @@ function createCard(cert) {
 function renderStats(list) {
   const uniqueIssuers = [...new Set(list.map((c) => c.issuer).filter(Boolean))].length;
   const valid = list.filter((c) => isSafeUrl(c.verifyUrl)).length;
+  const totalSkills = [...new Set(list.flatMap((c) => c.skills || []))].length;
   const items = [
-    ["Credenciais", list.length],
-    ["Com verificação", valid],
-    ["Emissores", uniqueIssuers],
-    ["Skills", [...new Set(list.flatMap((c) => c.skills || []))].length]
+    { label: "Credenciais", value: list.length, icon: "🎓", helper: "Itens visíveis no momento" },
+    { label: "Com verificação", value: valid, icon: "✅", helper: "Com link oficial" },
+    { label: "Emissores", value: uniqueIssuers, icon: "🏢", helper: "Instituições diferentes" },
+    { label: "Skills", value: totalSkills, icon: "🧠", helper: "Competências catalogadas" }
   ];
-  statsPanel.replaceChildren(...items.map(([label, value]) => {
+  statsPanel.replaceChildren(...items.map(({ label, value, icon, helper }) => {
     const el = document.createElement("article");
     el.className = "stat";
+    const top = document.createElement("div");
+    top.className = "stat-top";
+    const badge = document.createElement("span");
+    badge.className = "stat-icon";
+    badge.textContent = icon;
     const strong = document.createElement("strong");
     strong.textContent = String(value);
+    top.append(badge, strong);
     const span = document.createElement("span");
     span.textContent = label;
-    el.append(strong, span);
+    const small = document.createElement("small");
+    small.textContent = helper;
+    el.append(top, span, small);
     return el;
   }));
 }
