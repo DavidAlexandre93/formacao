@@ -33,7 +33,8 @@ function safeText(v, fallback = "") {
 
 function setTheme(mode) {
   const isLight = mode === "light";
-  document.body.toggleAttribute("data-theme", isLight);
+  if (isLight) document.body.setAttribute("data-theme", "light");
+  else document.body.removeAttribute("data-theme");
   $("#btnLight").classList.toggle("active", isLight);
   $("#btnDark").classList.toggle("active", !isLight);
   $("#btnLight").setAttribute("aria-pressed", String(isLight));
