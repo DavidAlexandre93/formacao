@@ -46,8 +46,9 @@ header { display:flex; gap:16px; justify-content:space-between; flex-wrap:wrap; 
   fill: currentColor;
 }
 .switch{display:inline-flex;gap:4px;padding:6px;border:1px solid var(--border);background:var(--chip);border-radius:999px}
-.switch button{width:40px;height:40px;border:0;background:transparent;border-radius:999px;color:var(--text);cursor:pointer}
-.switch button.active{background:var(--card);box-shadow:inset 0 0 0 1px var(--border)}
+.switch button{width:40px;height:40px;border:0;background:transparent;border-radius:999px;color:var(--text);cursor:pointer;font-size:1.05rem;display:inline-flex;align-items:center;justify-content:center;opacity:.72;transition:opacity .2s ease,color .2s ease}
+.switch button:hover,.switch button:focus-visible{opacity:1}
+.switch button.active{background:var(--card);box-shadow:inset 0 0 0 1px var(--border);opacity:1}
 .btn, .input, select, .verify {height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text)}
 .btn { font-weight:700; cursor:pointer; }
 .verify {display:inline-flex;align-items:center;text-decoration:none;font-weight:700}
