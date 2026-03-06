@@ -61,6 +61,34 @@ header { display:flex; gap:16px; justify-content:space-between; flex-wrap:wrap; 
 .switch button.active{background:var(--card);box-shadow:inset 0 0 0 1px var(--border);opacity:1}
 .btn, .input, select, .verify {height:44px;padding:0 14px;border-radius:12px;border:1px solid var(--border);background:var(--card);color:var(--text)}
 .btn { font-weight:700; cursor:pointer; }
+
+.resume-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  border: 0;
+  color: #fff;
+  background: linear-gradient(120deg, #ff6a00, #ff2d55, #7c5cff);
+  background-size: 200% 200%;
+  box-shadow: 0 12px 28px rgba(255, 45, 85, 0.45);
+  animation: pulseGlow 2.2s ease-in-out infinite;
+}
+.resume-cta:hover,
+.resume-cta:focus-visible {
+  transform: translateY(-1px) scale(1.02);
+}
+@keyframes pulseGlow {
+  0%,
+  100% {
+    background-position: 0% 50%;
+    box-shadow: 0 12px 28px rgba(255, 45, 85, 0.45);
+  }
+  50% {
+    background-position: 100% 50%;
+    box-shadow: 0 16px 36px rgba(124, 92, 255, 0.55);
+  }
+}
 .verify {display:inline-flex;align-items:center;text-decoration:none;font-weight:700}
 .verify.primary { background: linear-gradient(135deg, var(--brand), var(--brand-2)); border:0; color:#fff; }
 .stats { margin-top:18px; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; }
