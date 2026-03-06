@@ -8,24 +8,92 @@
       name="description"
       content="Mentoria individual para profissionais de TI que querem conquistar certificações com um plano claro, suporte semanal e foco em aprovação mais rápida."
     />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="author" content="Mentoria Cert TI" />
+    <link rel="canonical" href="https://mentorcertti.com/" />
+
+    <meta property="og:locale" content="pt_BR" />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Mentoria Cert TI" />
     <meta property="og:title" content="Mentoria de Certificações em TI" />
     <meta
       property="og:description"
       content="Receba um plano de estudo personalizado, acompanhamento semanal e simulados direcionados para acelerar sua aprovação."
     />
-    <meta property="og:image" content="img/perfil.jpg" />
+    <meta property="og:url" content="https://mentorcertti.com/" />
+    <meta property="og:image" content="https://mentorcertti.com/img/perfil.jpg" />
+
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="Mentoria de Certificações em TI" />
     <meta
       name="twitter:description"
       content="Plano personalizado e acompanhamento prático para você ser aprovado na certificação certa."
     />
-    <meta name="twitter:image" content="img/perfil.jpg" />
+    <meta name="twitter:image" content="https://mentorcertti.com/img/perfil.jpg" />
+
     <link rel="icon" type="image/jpeg" href="img/perfil.jpg" />
     <link rel="manifest" href="site.webmanifest" />
     <link rel="preload" href="styles.css" as="style" />
     <link rel="stylesheet" href="styles.css" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Organization",
+            "name": "Mentoria Cert TI",
+            "url": "https://mentorcertti.com",
+            "logo": "https://mentorcertti.com/img/perfil.jpg",
+            "sameAs": ["https://www.linkedin.com", "https://www.instagram.com"]
+          },
+          {
+            "@type": "Service",
+            "serviceType": "Mentoria de Certificações em TI",
+            "provider": {
+              "@type": "Organization",
+              "name": "Mentoria Cert TI"
+            },
+            "url": "https://mentorcertti.com/",
+            "offers": {
+              "@type": "Offer",
+              "priceCurrency": "BRL",
+              "price": "497",
+              "availability": "https://schema.org/InStock"
+            }
+          },
+          {
+            "@type": "FAQPage",
+            "mainEntity": [
+              {
+                "@type": "Question",
+                "name": "Preciso já ter experiência com certificações?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Não. Adaptamos o plano para iniciantes e para quem já tentou antes."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "Em quanto tempo posso tentar a prova?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Depende da certificação e da sua rotina, mas normalmente entre 6 e 10 semanas."
+                }
+              },
+              {
+                "@type": "Question",
+                "name": "A mentoria inclui o valor da prova oficial?",
+                "acceptedAnswer": {
+                  "@type": "Answer",
+                  "text": "Não, o voucher da prova é pago separadamente direto para a certificadora."
+                }
+              }
+            ]
+          }
+        ]
+      }
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -53,7 +121,14 @@
             <li>Suporte semanal no WhatsApp</li>
           </ul>
         </div>
-        <img src="img/perfil.jpg" alt="Mentor de certificações de TI sorrindo" width="560" height="420" fetchpriority="high" />
+        <img
+          src="img/perfil.jpg"
+          alt="Mentor de certificações de TI sorrindo"
+          width="560"
+          height="420"
+          fetchpriority="high"
+          decoding="async"
+        />
       </section>
 
       <section class="section wrapper" id="beneficios">
