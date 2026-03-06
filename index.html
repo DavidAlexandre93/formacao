@@ -1,94 +1,198 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Certificados & Certificações - David Alexandre Fernandes</title>
-    <meta name="description" content="Portfólio público de certificados, diplomas e certificações com links de verificação." />
-    <meta property="og:title" content="Certificados & Certificações - David Alexandre Fernandes" />
-    <meta property="og:description" content="Portfólio público com filtros, busca e verificação de credenciais." />
+    <title>Mentoria de Certificações em TI | Plano prático para sua próxima aprovação</title>
+    <meta
+      name="description"
+      content="Mentoria individual para profissionais de TI que querem conquistar certificações com um plano claro, suporte semanal e foco em aprovação mais rápida."
+    />
     <meta property="og:type" content="website" />
+    <meta property="og:title" content="Mentoria de Certificações em TI" />
+    <meta
+      property="og:description"
+      content="Receba um plano de estudo personalizado, acompanhamento semanal e simulados direcionados para acelerar sua aprovação."
+    />
     <meta property="og:image" content="img/perfil.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Certificados & Certificações - David Alexandre Fernandes" />
-    <meta name="twitter:description" content="Portfólio público com filtros, busca e verificação de credenciais." />
+    <meta name="twitter:title" content="Mentoria de Certificações em TI" />
+    <meta
+      name="twitter:description"
+      content="Plano personalizado e acompanhamento prático para você ser aprovado na certificação certa."
+    />
     <meta name="twitter:image" content="img/perfil.jpg" />
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' https: data:; style-src 'self'; script-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'" />
     <link rel="icon" type="image/jpeg" href="img/perfil.jpg" />
     <link rel="manifest" href="site.webmanifest" />
+    <link rel="preload" href="styles.css" as="style" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="container">
-      <div class="hero">
-        <header>
-          <div class="title">
-            <img class="avatar" id="avatarImg" src="img/perfil.jpg" alt="Foto de perfil de David Alexandre Fernandes" tabindex="0" />
-            <h1>David Alexandre Fernandes 🎓 Certificados &amp; Certificações</h1>
-          </div>
-          <div class="toolbar">
-            <div class="switch" role="group" aria-label="Tema">
-              <button id="btnLight" aria-label="Claro" title="Claro" aria-pressed="false">
-                <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="12" cy="12" r="4"></circle>
-                  <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path>
-                </svg>
-              </button>
-              <button id="btnDark" class="active" aria-label="Escuro" title="Escuro" aria-pressed="true">
-                <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                </svg>
-              </button>
-            </div>
-            <button id="btnPrint" class="btn">🖨️ Exportar PDF</button>
-            <a class="linkedin-cta" id="btnLinkedIn" href="#" target="_blank" rel="noopener" aria-label="Abrir LinkedIn de David Alexandre Fernandes">
-              <span class="sr-only">LinkedIn de David Alexandre Fernandes</span>
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M20.45 20.45h-3.56v-5.58c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.95v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.27 2.38 4.27 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/>
-              </svg>
-            </a>
-          </div>
-        </header>
-        <section class="stats" id="statsPanel" aria-label="Métricas"></section>
+    <header class="site-header">
+      <div class="wrapper header-row">
+        <a class="brand" href="#topo">Mentoria Cert TI</a>
+        <a class="btn btn-outline" href="#lead-form" data-track="cta-header">Quero meu plano</a>
       </div>
+    </header>
 
-      <section class="filters" aria-label="Filtros">
+    <main id="topo">
+      <section class="hero wrapper">
         <div>
-          <label for="search">Busca</label>
-          <input id="search" class="input" placeholder="Buscar por título, emissor, habilidade…" />
+          <p class="eyebrow">Objetivo: agendar diagnóstico gratuito</p>
+          <h1>Conquiste sua próxima certificação em TI com um plano claro e suporte real.</h1>
+          <p class="subheadline">
+            Mentoria individual para profissionais de TI que querem reduzir tentativas, estudar com método e aumentar as chances de aprovação em até 8 semanas.
+          </p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#lead-form" data-track="cta-hero">Agendar diagnóstico gratuito</a>
+            <a class="btn btn-outline" href="#como-funciona" data-track="cta-secondary">Ver como funciona</a>
+          </div>
+          <ul class="hero-proof" aria-label="Resultados e prova social">
+            <li>+180 mentorados</li>
+            <li>92% de satisfação</li>
+            <li>Suporte semanal no WhatsApp</li>
+          </ul>
         </div>
-        <div>
-          <label for="filterCategory">Categoria</label>
-          <select id="filterCategory">
-            <option value="">Todas</option>
-          </select>
-        </div>
-        <div>
-          <label for="filterIssuer">Emissor</label>
-          <select id="filterIssuer">
-            <option value="">Todos</option>
-          </select>
-        </div>
-        <div>
-          <label for="sortBy">Ordenação</label>
-          <select id="sortBy">
-            <option value="dateDesc">Mais recentes</option>
-            <option value="dateAsc">Mais antigos</option>
-            <option value="titleAsc">Título A→Z</option>
-          </select>
+        <img src="img/perfil.jpg" alt="Mentor de certificações de TI sorrindo" width="560" height="420" fetchpriority="high" />
+      </section>
+
+      <section class="section wrapper" id="beneficios">
+        <h2>O que você ganha com a mentoria</h2>
+        <ul class="benefits-grid">
+          <li>Plano de estudo enxuto, focado no que realmente cai na prova.</li>
+          <li>Roteiro semanal com metas claras para evitar procrastinação.</li>
+          <li>Simulados direcionados para reforçar seus pontos fracos.</li>
+          <li>Feedback prático para ajustar estratégia antes da prova.</li>
+          <li>Canal direto para tirar dúvidas sem ficar travado.</li>
+          <li>Checklist final para chegar confiante no dia do exame.</li>
+        </ul>
+      </section>
+
+      <section class="section section-alt" id="como-funciona">
+        <div class="wrapper">
+          <h2>Como funciona em 3 passos</h2>
+          <div class="steps">
+            <article>
+              <h3>1. Diagnóstico</h3>
+              <p>Mapeamos sua certificação alvo, rotina, nível técnico e prazo ideal.</p>
+            </article>
+            <article>
+              <h3>2. Plano personalizado</h3>
+              <p>Você recebe trilha de estudo com materiais, prática e checkpoints semanais.</p>
+            </article>
+            <article>
+              <h3>3. Acompanhamento</h3>
+              <p>Fazemos ajustes contínuos até você chegar pronto para a prova oficial.</p>
+            </article>
+          </div>
         </div>
       </section>
 
-      <section id="grid" class="grid" aria-live="polite"></section>
-    </div>
+      <section class="section wrapper" id="prova-social">
+        <h2>Resultados reais de alunos</h2>
+        <div class="testimonials">
+          <article>
+            <p>“Saí do zero para aprovado na AZ-900 em 5 semanas, sem estudar conteúdo aleatório.”</p>
+            <strong>Marina S. — Analista de Suporte</strong>
+          </article>
+          <article>
+            <p>“A mentoria me deu foco. Parei de desistir no meio e passei na prova na primeira tentativa.”</p>
+            <strong>Rafael C. — Dev Backend</strong>
+          </article>
+          <article>
+            <p>“O plano semanal e os simulados foram o diferencial para eu subir de nível na carreira.”</p>
+            <strong>Luana P. — Cloud Engineer Jr.</strong>
+          </article>
+        </div>
+      </section>
 
-    <div id="zoomOverlay" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Foto ampliada de perfil" tabindex="-1">
-      <img src="img/perfil.jpg" alt="Foto ampliada de David Alexandre Fernandes" />
-    </div>
+      <section class="section section-alt" id="oferta">
+        <div class="wrapper offer">
+          <div>
+            <h2>Plano Mentoria Pro</h2>
+            <p>Ideal para quem quer acelerar aprovação sem perder tempo com tentativa e erro.</p>
+            <ul>
+              <li>4 encontros ao vivo (1 por semana)</li>
+              <li>Plano de estudo personalizado</li>
+              <li>Simulados e revisão de desempenho</li>
+              <li>Suporte no WhatsApp por 30 dias</li>
+              <li>Garantia: 7 dias para cancelar sem risco</li>
+            </ul>
+          </div>
+          <aside class="price-card" aria-label="Preço e chamada para ação">
+            <p class="price">R$ 497</p>
+            <p>ou 12x no cartão</p>
+            <a class="btn btn-primary" href="#lead-form" data-track="cta-price">Quero garantir minha vaga</a>
+          </aside>
+        </div>
+      </section>
 
-    <div id="certModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Visualização do certificado" tabindex="-1">
-      <img id="certModalImg" src="" alt="" />
-    </div>
+      <section class="section wrapper" id="faq">
+        <h2>Perguntas frequentes</h2>
+        <div class="faq-list">
+          <details><summary>Preciso já ter experiência com certificações?</summary><p>Não. Adaptamos o plano para iniciantes e para quem já tentou antes.</p></details>
+          <details><summary>Em quanto tempo posso tentar a prova?</summary><p>Depende da certificação e da sua rotina, mas normalmente entre 6 e 10 semanas.</p></details>
+          <details><summary>A mentoria inclui o valor da prova oficial?</summary><p>Não, o voucher da prova é pago separadamente direto para a certificadora.</p></details>
+          <details><summary>Se eu tiver pouco tempo por dia, funciona?</summary><p>Sim. Estruturamos um plano realista com blocos curtos e consistentes.</p></details>
+          <details><summary>Tenho suporte fora das sessões?</summary><p>Sim. Você pode enviar dúvidas no WhatsApp durante o período da mentoria.</p></details>
+          <details><summary>Serve para quais certificações?</summary><p>Trabalhamos com trilhas de Cloud, DevOps, Segurança e fundamentos de TI.</p></details>
+        </div>
+      </section>
+
+      <section class="section section-alt" id="lead-form">
+        <div class="wrapper form-wrap">
+          <div>
+            <h2>Agende seu diagnóstico gratuito</h2>
+            <p>Preencha seus dados e receba o próximo passo por e-mail em até 1 dia útil.</p>
+          </div>
+          <form id="contactForm" novalidate>
+            <label for="name">Nome</label>
+            <input id="name" name="name" type="text" autocomplete="name" required />
+
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" autocomplete="email" required />
+
+            <label for="phone">WhatsApp (opcional)</label>
+            <input id="phone" name="phone" type="tel" autocomplete="tel" placeholder="(11) 99999-9999" />
+
+            <input type="text" name="company" id="company" tabindex="-1" autocomplete="off" class="honeypot" aria-hidden="true" />
+
+            <input type="hidden" id="utmSource" name="utm_source" />
+            <input type="hidden" id="utmMedium" name="utm_medium" />
+            <input type="hidden" id="utmCampaign" name="utm_campaign" />
+
+            <button class="btn btn-primary" id="submitBtn" type="submit">Quero receber meu plano</button>
+            <p id="formMessage" role="status" aria-live="polite"></p>
+            <p class="form-note">Ao enviar, você concorda com a nossa <a href="#privacidade">Política de Privacidade</a>.</p>
+          </form>
+        </div>
+      </section>
+
+      <section class="section wrapper" id="cta-final">
+        <h2>Pronto para ser aprovado com mais segurança?</h2>
+        <a class="btn btn-primary" href="#lead-form" data-track="cta-final">Agendar meu diagnóstico agora</a>
+      </section>
+    </main>
+
+    <footer class="site-footer" id="privacidade">
+      <div class="wrapper footer-grid">
+        <div>
+          <strong>Contato</strong>
+          <p><a href="mailto:contato@mentorcertti.com">contato@mentorcertti.com</a></p>
+          <p><a href="https://wa.me/5511999999999" target="_blank" rel="noopener" data-track="whatsapp">Falar no WhatsApp</a></p>
+        </div>
+        <div>
+          <strong>Links legais</strong>
+          <p><a href="#">Política de Privacidade</a></p>
+          <p><a href="#">Termos de Uso</a></p>
+        </div>
+        <div>
+          <strong>Redes</strong>
+          <p><a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a></p>
+          <p><a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a></p>
+        </div>
+      </div>
+    </footer>
 
     <script src="app.js" defer></script>
   </body>
