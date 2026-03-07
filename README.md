@@ -17,6 +17,7 @@ Portfólio público de certificados, certificações e diplomas.
 - Tema claro/escuro com `aria-pressed`.
 - Modal acessível para visualizar documentos.
 - Exportação para PDF via impressão.
+- Tradução automática da interface com base no idioma do navegador (pt-BR, en, es), com seletor manual de idioma.
 
 ## Categorias usadas na UI
 
