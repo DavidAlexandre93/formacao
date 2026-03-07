@@ -1,21 +1,44 @@
 const CONFIG = {
-  linkedin: "https://www.linkedin.com/in/david-fernandes-08b005b4/"
+  linkedin: "https://www.linkedin.com/in/david-fernandes-08b005b4/",
+  dataFile: "./data/certs.json"
 };
 
-const $ = (s, el = document) => el.querySelector(s);
-const $$ = (s, el = document) => [...el.querySelectorAll(s)];
-const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const VALID_DOC_IMAGE = /^img\/[a-z0-9._\-/]+$/i;
-let certs = [];
-let previousFocus = null;
-let activeModal = null;
+const REDUCED_MOTION = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const grid = $("#grid");
-const statsPanel = $("#statsPanel");
-const search = $("#search");
-const fCat = $("#filterCategory");
-const fIssuer = $("#filterIssuer");
-const sortBy = $("#sortBy");
+const $ = (selector, root = document) => root.querySelector(selector);
+const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
+
+const UI = {
+  grid: $("#grid"),
+  statsPanel: $("#statsPanel"),
+  search: $("#search"),
+  category: $("#filterCategory"),
+  issuer: $("#filterIssuer"),
+  sortBy: $("#sortBy"),
+  btnLight: $("#btnLight"),
+  btnDark: $("#btnDark"),
+  btnPrint: $("#btnPrint"),
+  btnLinkedIn: $("#btnLinkedIn"),
+  avatarImg: $("#avatarImg"),
+  zoomOverlay: $("#zoomOverlay"),
+  certModal: $("#certModal"),
+  certModalImg: $("#certModalImg")
+};
+
+const AppState = {
+  certs: [],
+  previousFocus: null,
+  activeModal: null
+};
+
+function safeText(value, fallback = "") {
+  return String(value ?? fallback).trim() || fallback;
+}
+
+function safeArray(value) {
+  return Array.isArray(value) ? value : [];
+}
 
 function isSafeUrl(value) {
   if (!value) return false;
@@ -27,79 +50,167 @@ function isSafeUrl(value) {
   }
 }
 
-function safeText(v, fallback = "") {
-  return String(v ?? fallback).trim() || fallback;
+function isSafeImagePath(path) {
+  return VALID_DOC_IMAGE.test(safeText(path));
+}
+
+function normalizeDoc(doc) {
+  return {
+    label: safeText(doc?.label, "Documento"),
+    url: isSafeUrl(doc?.url) ? doc.url : "",
+    imagePath: isSafeImagePath(doc?.imagePath) ? doc.imagePath : ""
+  };
+}
+
+function normalizeCert(cert) {
+  const docs = safeArray(cert?.docs).map(normalizeDoc);
+
+  return {
+    id: safeText(cert?.id),
+    title: safeText(cert?.title, "Título indisponível"),
+    issuer: safeText(cert?.issuer, "—"),
+    category: safeText(cert?.category),
+    issueDate: safeText(cert?.issueDate),
+    expireDate: safeText(cert?.expireDate),
+    verifyUrl: isSafeUrl(cert?.verifyUrl) ? cert.verifyUrl : "",
+    badgeUrl: isSafeUrl(cert?.badgeUrl) ? cert.badgeUrl : "",
+    logoUrl: isSafeUrl(cert?.logoUrl) ? cert.logoUrl : "",
+    qrCodeUrl: isSafeUrl(cert?.qrCodeUrl) ? cert.qrCodeUrl : "",
+    skills: safeArray(cert?.skills).map((skill) => safeText(skill)).filter(Boolean),
+    docs
+  };
+}
+
+function getBadgeSource(cert) {
+  return cert.badgeUrl || cert.logoUrl;
+}
+
+function getPrimaryDocImage(cert) {
+  return cert.docs.find((doc) => doc.imagePath) || null;
 }
 
 function setTheme(mode) {
   const isLight = mode === "light";
   if (isLight) document.body.setAttribute("data-theme", "light");
   else document.body.removeAttribute("data-theme");
-  $("#btnLight").classList.toggle("active", isLight);
-  $("#btnDark").classList.toggle("active", !isLight);
-  $("#btnLight").setAttribute("aria-pressed", String(isLight));
-  $("#btnDark").setAttribute("aria-pressed", String(!isLight));
+
+  UI.btnLight.classList.toggle("active", isLight);
+  UI.btnDark.classList.toggle("active", !isLight);
+  UI.btnLight.setAttribute("aria-pressed", String(isLight));
+  UI.btnDark.setAttribute("aria-pressed", String(!isLight));
+
   localStorage.setItem("theme", isLight ? "light" : "dark");
 }
 
-function fmtDate(ym) {
+function formatDate(ym) {
   if (!ym) return "";
-  const [y, m] = ym.split("-");
-  const ms = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-  return `${ms[(+m || 1) - 1]}/${y}`;
+  const [year, month] = ym.split("-");
+  const months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
+  return `${months[(+month || 1) - 1]}/${year}`;
 }
 
 function createLink(className, href, text) {
   if (!isSafeUrl(href)) return null;
-  const a = document.createElement("a");
-  a.className = className;
-  a.href = href;
-  a.target = "_blank";
-  a.rel = "noopener noreferrer";
-  a.textContent = text;
-  return a;
+
+  const link = document.createElement("a");
+  link.className = className;
+  link.href = href;
+  link.target = "_blank";
+  link.rel = "noopener noreferrer";
+  link.textContent = text;
+  return link;
 }
 
 function createImage(className, src, alt) {
   if (!isSafeUrl(src)) return null;
+
   const img = document.createElement("img");
   img.className = className;
   img.src = src;
   img.alt = alt;
   img.loading = "lazy";
+  img.decoding = "async";
   return img;
 }
 
-function getPrimaryDocImage(cert) {
-  if (!Array.isArray(cert.docs)) return null;
-  return cert.docs.find((doc) => doc?.imagePath && VALID_DOC_IMAGE.test(doc.imagePath)) || null;
-}
-
-function openModal(modal, focusEl) {
-  previousFocus = focusEl || document.activeElement;
-  activeModal = modal;
+function openModal(modal, triggerElement) {
+  AppState.previousFocus = triggerElement || document.activeElement;
+  AppState.activeModal = modal;
   modal.classList.add("open");
   modal.setAttribute("aria-hidden", "false");
-  const first = modal.querySelector("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
-  (first || modal).focus();
+
+  const firstFocusable = modal.querySelector("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])");
+  (firstFocusable || modal).focus();
 }
 
 function closeModal(modal) {
   modal.classList.remove("open");
   modal.setAttribute("aria-hidden", "true");
-  activeModal = null;
-  if (previousFocus && document.contains(previousFocus)) previousFocus.focus();
+  AppState.activeModal = null;
+
+  if (AppState.previousFocus && document.contains(AppState.previousFocus)) {
+    AppState.previousFocus.focus();
+  }
 }
 
-function trapFocus(e) {
-  if (!activeModal || e.key !== "Tab") return;
-  const focusables = $$("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])", activeModal)
-    .filter((el) => !el.hasAttribute("disabled"));
+function trapFocus(event) {
+  if (!AppState.activeModal || event.key !== "Tab") return;
+
+  const focusables = $$("button, [href], input, select, textarea, [tabindex]:not([tabindex='-1'])", AppState.activeModal)
+    .filter((element) => !element.hasAttribute("disabled"));
+
   if (!focusables.length) return;
+
   const first = focusables[0];
   const last = focusables[focusables.length - 1];
-  if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-  if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+
+  if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  }
+
+  if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+}
+
+function renderStats(list) {
+  const uniqueIssuers = [...new Set(list.map((cert) => cert.issuer).filter(Boolean))].length;
+  const validLinks = list.filter((cert) => cert.verifyUrl).length;
+  const totalSkills = [...new Set(list.flatMap((cert) => cert.skills))].length;
+
+  const items = [
+    { label: "Credenciais", value: list.length, icon: "🎓", helper: "Itens visíveis no momento" },
+    { label: "Com verificação", value: validLinks, icon: "✅", helper: "Com link oficial" },
+    { label: "Emissores", value: uniqueIssuers, icon: "🏢", helper: "Instituições diferentes" },
+    { label: "Skills", value: totalSkills, icon: "🧠", helper: "Competências catalogadas" }
+  ];
+
+  UI.statsPanel.replaceChildren(...items.map(({ label, value, icon, helper }) => {
+    const stat = document.createElement("article");
+    stat.className = "stat";
+
+    const top = document.createElement("div");
+    top.className = "stat-top";
+
+    const badge = document.createElement("span");
+    badge.className = "stat-icon";
+    badge.textContent = icon;
+
+    const strong = document.createElement("strong");
+    strong.textContent = String(value);
+
+    const name = document.createElement("span");
+    name.textContent = label;
+
+    const helperText = document.createElement("small");
+    helperText.textContent = helper;
+
+    top.append(badge, strong);
+    stat.append(top, name, helperText);
+    return stat;
+  }));
 }
 
 function createCard(cert) {
@@ -108,35 +219,38 @@ function createCard(cert) {
 
   const head = document.createElement("div");
   head.className = "card-head";
+
   const left = document.createElement("div");
   left.className = "left";
+
   const right = document.createElement("div");
   right.className = "right";
 
-  const badge = createImage("badge", cert.badgeUrl, "Badge");
+  const badge = createImage("badge", getBadgeSource(cert), "Badge");
   if (badge) left.appendChild(badge);
 
   const textWrap = document.createElement("div");
   const title = document.createElement("h3");
-  title.textContent = safeText(cert.title, "Título indisponível");
+  title.textContent = cert.title;
 
   const issuer = document.createElement("p");
-  issuer.textContent = safeText(cert.issuer, "—");
+  issuer.textContent = cert.issuer;
 
   const meta = document.createElement("p");
   const parts = [];
-  if (fmtDate(cert.issueDate)) parts.push(`Emitido: ${fmtDate(cert.issueDate)}`);
-  if (fmtDate(cert.expireDate)) parts.push(`Expira: ${fmtDate(cert.expireDate)}`);
-  if (cert.id) parts.push(`ID: ${safeText(cert.id)}`);
+  if (formatDate(cert.issueDate)) parts.push(`Emitido: ${formatDate(cert.issueDate)}`);
+  if (formatDate(cert.expireDate)) parts.push(`Expira: ${formatDate(cert.expireDate)}`);
+  if (cert.id) parts.push(`ID: ${cert.id}`);
   meta.textContent = parts.join(" • ");
 
   textWrap.append(title, issuer, meta);
   left.appendChild(textWrap);
 
-  if (isSafeUrl(cert.verifyUrl)) {
-    const qrImage = createImage("qr-code", cert.qrCodeUrl, `QR Code de verificação de ${safeText(cert.title, "credencial")}`);
-    if (qrImage) right.appendChild(qrImage);
-    else {
+  if (cert.verifyUrl) {
+    const qrImage = createImage("qr-code", cert.qrCodeUrl, `QR Code de verificação de ${cert.title}`);
+    if (qrImage) {
+      right.appendChild(qrImage);
+    } else {
       const qrFallback = document.createElement("div");
       qrFallback.className = "qr-placeholder";
       qrFallback.textContent = "QR indisponível";
@@ -147,168 +261,184 @@ function createCard(cert) {
   head.append(left, right);
   card.appendChild(head);
 
-  if (Array.isArray(cert.skills) && cert.skills.length) {
+  if (cert.skills.length) {
     const chips = document.createElement("div");
     chips.className = "chips";
-    cert.skills.forEach((s) => {
+
+    cert.skills.forEach((skill) => {
       const chip = document.createElement("span");
       chip.className = "chip";
-      chip.textContent = safeText(s);
+      chip.textContent = skill;
       chips.appendChild(chip);
     });
+
     card.appendChild(chips);
   }
 
-  if (Array.isArray(cert.docs) && cert.docs.length) {
-    const ul = document.createElement("ul");
-    cert.docs.forEach((doc) => {
-      const li = document.createElement("li");
-      if (!(doc.imagePath && VALID_DOC_IMAGE.test(doc.imagePath))) {
-        const docLink = createLink("", doc.url, safeText(doc.label, "Documento"));
-        if (docLink) li.appendChild(docLink);
-      }
-      if (li.children.length) ul.appendChild(li);
+  const docLinks = cert.docs.filter((doc) => doc.url && !doc.imagePath);
+  if (docLinks.length) {
+    const list = document.createElement("ul");
+
+    docLinks.forEach((doc) => {
+      const item = document.createElement("li");
+      const link = createLink("", doc.url, doc.label);
+      if (!link) return;
+      item.appendChild(link);
+      list.appendChild(item);
     });
-    if (ul.children.length) card.appendChild(ul);
+
+    if (list.children.length) card.appendChild(list);
   }
 
   const actions = document.createElement("div");
   actions.className = "card-actions";
-  const primaryDocImage = getPrimaryDocImage(cert);
-  let verify = null;
-  if (primaryDocImage) {
-    verify = document.createElement("button");
-    verify.className = "verify primary btn";
-    verify.textContent = "Ver certificado aqui";
-    verify.dataset.docImagePath = primaryDocImage.imagePath;
-    verify.dataset.docTitle = safeText(primaryDocImage.label, cert.title);
-  } else {
-    verify = createLink("verify primary", cert.verifyUrl, "Verificar credencial");
-  }
-  const badgeLink = createLink("verify", cert.badgeUrl, "Abrir badge");
-  if (verify) actions.appendChild(verify);
-  if (badgeLink) actions.appendChild(badgeLink);
-  if (actions.children.length) card.appendChild(actions);
 
+  const primaryDocImage = getPrimaryDocImage(cert);
+  if (primaryDocImage) {
+    const openCertificate = document.createElement("button");
+    openCertificate.className = "verify primary btn";
+    openCertificate.textContent = "Ver certificado aqui";
+    openCertificate.dataset.docImagePath = primaryDocImage.imagePath;
+    openCertificate.dataset.docTitle = primaryDocImage.label || cert.title;
+    actions.appendChild(openCertificate);
+  } else {
+    const verifyLink = createLink("verify primary", cert.verifyUrl, "Verificar credencial");
+    if (verifyLink) actions.appendChild(verifyLink);
+  }
+
+  const badgeLink = createLink("verify", getBadgeSource(cert), "Abrir badge");
+  if (badgeLink) actions.appendChild(badgeLink);
+
+  if (actions.children.length) card.appendChild(actions);
   return card;
 }
 
-function renderStats(list) {
-  const uniqueIssuers = [...new Set(list.map((c) => c.issuer).filter(Boolean))].length;
-  const valid = list.filter((c) => isSafeUrl(c.verifyUrl)).length;
-  const totalSkills = [...new Set(list.flatMap((c) => c.skills || []))].length;
-  const items = [
-    { label: "Credenciais", value: list.length, icon: "🎓", helper: "Itens visíveis no momento" },
-    { label: "Com verificação", value: valid, icon: "✅", helper: "Com link oficial" },
-    { label: "Emissores", value: uniqueIssuers, icon: "🏢", helper: "Instituições diferentes" },
-    { label: "Skills", value: totalSkills, icon: "🧠", helper: "Competências catalogadas" }
-  ];
-  statsPanel.replaceChildren(...items.map(({ label, value, icon, helper }) => {
-    const el = document.createElement("article");
-    el.className = "stat";
-    const top = document.createElement("div");
-    top.className = "stat-top";
-    const badge = document.createElement("span");
-    badge.className = "stat-icon";
-    badge.textContent = icon;
-    const strong = document.createElement("strong");
-    strong.textContent = String(value);
-    top.append(badge, strong);
-    const span = document.createElement("span");
-    span.textContent = label;
-    const small = document.createElement("small");
-    small.textContent = helper;
-    el.append(top, span, small);
-    return el;
-  }));
-}
+function applyFiltersAndSort() {
+  const term = UI.search.value.toLowerCase().trim();
 
-function render() {
-  const term = search.value.toLowerCase().trim();
-  let list = [...certs]
-    .filter((c) => !term || `${c.title} ${c.issuer} ${(c.skills || []).join(" ")}`.toLowerCase().includes(term))
-    .filter((c) => !fCat.value || c.category === fCat.value)
-    .filter((c) => !fIssuer.value || c.issuer === fIssuer.value);
+  const filtered = AppState.certs
+    .filter((cert) => {
+      if (!term) return true;
+      const searchable = `${cert.title} ${cert.issuer} ${cert.skills.join(" ")}`.toLowerCase();
+      return searchable.includes(term);
+    })
+    .filter((cert) => !UI.category.value || cert.category === UI.category.value)
+    .filter((cert) => !UI.issuer.value || cert.issuer === UI.issuer.value);
 
   const sorters = {
     dateDesc: (a, b) => (b.issueDate || "").localeCompare(a.issueDate || ""),
     dateAsc: (a, b) => (a.issueDate || "").localeCompare(b.issueDate || ""),
     titleAsc: (a, b) => a.title.localeCompare(b.title, "pt-BR")
   };
-  list.sort(sorters[sortBy.value] || sorters.dateDesc);
+
+  filtered.sort(sorters[UI.sortBy.value] || sorters.dateDesc);
+  return filtered;
+}
+
+function renderEmptyState(message) {
+  const empty = document.createElement("article");
+  empty.className = "card";
+  empty.textContent = message;
+  UI.grid.replaceChildren(empty);
+  renderStats([]);
+}
+
+function render() {
+  const list = applyFiltersAndSort();
 
   if (!list.length) {
-    const empty = document.createElement("article");
-    empty.className = "card";
-    empty.textContent = "Nenhum item encontrado.";
-    grid.replaceChildren(empty);
-    renderStats([]);
+    renderEmptyState("Nenhum item encontrado.");
     return;
   }
 
-  grid.replaceChildren(...list.map(createCard));
+  UI.grid.replaceChildren(...list.map(createCard));
   renderStats(list);
 }
 
+function populateSelectOptions(select, values) {
+  values.forEach((value) => {
+    const option = document.createElement("option");
+    option.value = value;
+    option.textContent = value;
+    select.appendChild(option);
+  });
+}
+
 async function initData() {
-  const response = await fetch("./data/certs.json", { cache: "no-store" });
-  certs = await response.json();
-  const categories = [...new Set(certs.map((c) => c.category).filter(Boolean))].sort((a, b) => a.localeCompare(b, "pt-BR"));
-  categories.forEach((category) => {
-    const opt = document.createElement("option");
-    opt.value = category;
-    opt.textContent = category;
-    fCat.appendChild(opt);
-  });
-  const issuers = [...new Set(certs.map((c) => c.issuer).filter(Boolean))].sort((a, b) => a.localeCompare(b, "pt-BR"));
-  issuers.forEach((issuer) => {
-    const opt = document.createElement("option");
-    opt.value = issuer;
-    opt.textContent = issuer;
-    fIssuer.appendChild(opt);
-  });
-  render();
+  try {
+    const response = await fetch(CONFIG.dataFile, { cache: "no-store" });
+    if (!response.ok) throw new Error(`Falha ao carregar dados (${response.status})`);
+
+    const data = await response.json();
+    AppState.certs = safeArray(data).map(normalizeCert);
+
+    const categories = [...new Set(AppState.certs.map((cert) => cert.category).filter(Boolean))]
+      .sort((a, b) => a.localeCompare(b, "pt-BR"));
+    const issuers = [...new Set(AppState.certs.map((cert) => cert.issuer).filter(Boolean))]
+      .sort((a, b) => a.localeCompare(b, "pt-BR"));
+
+    populateSelectOptions(UI.category, categories);
+    populateSelectOptions(UI.issuer, issuers);
+
+    render();
+  } catch (error) {
+    console.error(error);
+    renderEmptyState("Não foi possível carregar as credenciais no momento.");
+  }
 }
 
 function initEvents() {
-  [search, fCat, fIssuer, sortBy].forEach((el) => el.addEventListener("input", render));
-  $("#btnLight").addEventListener("click", () => setTheme("light"));
-  $("#btnDark").addEventListener("click", () => setTheme("dark"));
-  $("#btnPrint").addEventListener("click", () => window.print());
+  UI.search.addEventListener("input", render);
+  UI.category.addEventListener("change", render);
+  UI.issuer.addEventListener("change", render);
+  UI.sortBy.addEventListener("change", render);
 
-  const btnLinkedIn = $("#btnLinkedIn");
-  if (isSafeUrl(CONFIG.linkedin)) btnLinkedIn.href = CONFIG.linkedin; else btnLinkedIn.classList.add("hidden");
+  UI.btnLight.addEventListener("click", () => setTheme("light"));
+  UI.btnDark.addEventListener("click", () => setTheme("dark"));
+  UI.btnPrint.addEventListener("click", () => window.print());
 
-  const zoomOverlay = $("#zoomOverlay");
-  const certModal = $("#certModal");
-  const certModalImg = $("#certModalImg");
+  if (isSafeUrl(CONFIG.linkedin)) UI.btnLinkedIn.href = CONFIG.linkedin;
+  else UI.btnLinkedIn.classList.add("hidden");
 
-  $("#avatarImg").addEventListener("click", (e) => openModal(zoomOverlay, e.currentTarget));
-  zoomOverlay.addEventListener("click", (e) => { if (e.target === zoomOverlay) closeModal(zoomOverlay); });
-  certModal.addEventListener("click", (e) => { if (e.target === certModal) closeModal(certModal); });
-
-  grid.addEventListener("click", (e) => {
-    const target = e.target.closest("button[data-doc-image-path]");
-    if (!target) return;
-    certModalImg.src = target.dataset.docImagePath;
-    certModalImg.alt = target.dataset.docTitle || "Certificado";
-    openModal(certModal, target);
+  UI.avatarImg.addEventListener("click", (event) => openModal(UI.zoomOverlay, event.currentTarget));
+  UI.zoomOverlay.addEventListener("click", (event) => {
+    if (event.target === UI.zoomOverlay) closeModal(UI.zoomOverlay);
   });
 
-  grid.addEventListener("mousemove", (e) => {
-    if (reducedMotion) return;
-    const card = e.target.closest(".card");
+  UI.certModal.addEventListener("click", (event) => {
+    if (event.target === UI.certModal) closeModal(UI.certModal);
+  });
+
+  UI.grid.addEventListener("click", (event) => {
+    const target = event.target.closest("button[data-doc-image-path]");
+    if (!target) return;
+
+    UI.certModalImg.src = target.dataset.docImagePath;
+    UI.certModalImg.alt = target.dataset.docTitle || "Certificado";
+    openModal(UI.certModal, target);
+  });
+
+  UI.grid.addEventListener("mousemove", (event) => {
+    if (REDUCED_MOTION) return;
+
+    const card = event.target.closest(".card");
     if (!card) return;
-    const r = card.getBoundingClientRect();
-    const x = (e.clientX - r.left) / r.width - 0.5;
-    const y = (e.clientY - r.top) / r.height - 0.5;
+
+    const rect = card.getBoundingClientRect();
+    const x = (event.clientX - rect.left) / rect.width - 0.5;
+    const y = (event.clientY - rect.top) / rect.height - 0.5;
     card.style.transform = `rotateX(${(-y * 6).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg)`;
   });
-  grid.addEventListener("mouseleave", () => $$(".card", grid).forEach((c) => { c.style.transform = ""; }));
 
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && activeModal) closeModal(activeModal);
-    trapFocus(e);
+  UI.grid.addEventListener("mouseleave", () => {
+    $$(".card", UI.grid).forEach((card) => {
+      card.style.transform = "";
+    });
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && AppState.activeModal) closeModal(AppState.activeModal);
+    trapFocus(event);
   });
 }
 
