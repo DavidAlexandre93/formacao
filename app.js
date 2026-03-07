@@ -19,6 +19,7 @@ const UI = {
   btnLight: $("#btnLight"),
   btnDark: $("#btnDark"),
   btnPrint: $("#btnPrint"),
+  languageSelect: $("#languageSelect"),
   btnLinkedIn: $("#btnLinkedIn"),
   avatarImg: $("#avatarImg"),
   zoomOverlay: $("#zoomOverlay"),
@@ -29,8 +30,190 @@ const UI = {
 const AppState = {
   certs: [],
   previousFocus: null,
-  activeModal: null
+  activeModal: null,
+  locale: "pt-BR"
 };
+
+const I18N = {
+  "pt-BR": {
+    pageTitle: "David Alexandre Fernandes 🎓 Certificados & Certificações",
+    languageLabel: "Idioma",
+    languageAuto: "Idioma automático",
+    btnPrint: "🖨️ Exportar PDF",
+    linkedinText: "LinkedIn de David Alexandre Fernandes",
+    linkedinAria: "Abrir LinkedIn de David Alexandre Fernandes",
+    avatarAlt: "Foto de perfil de David Alexandre Fernandes",
+    avatarZoomAlt: "Foto ampliada de David Alexandre Fernandes",
+    searchLabel: "Busca",
+    searchPlaceholder: "Buscar por título, emissor, habilidade…",
+    categoryLabel: "Categoria",
+    allCategories: "Todas",
+    issuerLabel: "Emissor",
+    allIssuers: "Todos",
+    sortLabel: "Ordenação",
+    sortDateDesc: "Mais recentes",
+    sortDateAsc: "Mais antigos",
+    sortTitleAsc: "Título A→Z",
+    statsLabel: "Métricas",
+    statsCredentials: "Credenciais",
+    statsVerified: "Com verificação",
+    statsIssuers: "Emissores",
+    statsSkills: "Skills",
+    statsVisibleItems: "Itens visíveis no momento",
+    statsOfficialLink: "Com link oficial",
+    statsDifferentInstitutions: "Instituições diferentes",
+    statsCatalogedSkills: "Competências catalogadas",
+    issued: "Emitido",
+    expires: "Expira",
+    id: "ID",
+    qrUnavailable: "QR indisponível",
+    viewCertificate: "Ver certificado aqui",
+    verifyCredential: "Verificar credencial",
+    openBadge: "Abrir badge",
+    emptyItems: "Nenhum item encontrado.",
+    loadError: "Não foi possível carregar as credenciais no momento.",
+    certificateFallbackAlt: "Certificado"
+  },
+  en: {
+    pageTitle: "David Alexandre Fernandes 🎓 Certificates & Credentials",
+    languageLabel: "Language",
+    languageAuto: "Automatic language",
+    btnPrint: "🖨️ Export PDF",
+    linkedinText: "David Alexandre Fernandes' LinkedIn",
+    linkedinAria: "Open David Alexandre Fernandes' LinkedIn",
+    avatarAlt: "Profile photo of David Alexandre Fernandes",
+    avatarZoomAlt: "Zoomed profile photo of David Alexandre Fernandes",
+    searchLabel: "Search",
+    searchPlaceholder: "Search by title, issuer, skill…",
+    categoryLabel: "Category",
+    allCategories: "All",
+    issuerLabel: "Issuer",
+    allIssuers: "All",
+    sortLabel: "Sort",
+    sortDateDesc: "Most recent",
+    sortDateAsc: "Oldest",
+    sortTitleAsc: "Title A→Z",
+    statsLabel: "Metrics",
+    statsCredentials: "Credentials",
+    statsVerified: "Verified",
+    statsIssuers: "Issuers",
+    statsSkills: "Skills",
+    statsVisibleItems: "Currently visible items",
+    statsOfficialLink: "With official link",
+    statsDifferentInstitutions: "Different institutions",
+    statsCatalogedSkills: "Cataloged skills",
+    issued: "Issued",
+    expires: "Expires",
+    id: "ID",
+    qrUnavailable: "QR unavailable",
+    viewCertificate: "View certificate",
+    verifyCredential: "Verify credential",
+    openBadge: "Open badge",
+    emptyItems: "No items found.",
+    loadError: "Unable to load credentials right now.",
+    certificateFallbackAlt: "Certificate"
+  },
+  es: {
+    pageTitle: "David Alexandre Fernandes 🎓 Certificados y Certificaciones",
+    languageLabel: "Idioma",
+    languageAuto: "Idioma automático",
+    btnPrint: "🖨️ Exportar PDF",
+    linkedinText: "LinkedIn de David Alexandre Fernandes",
+    linkedinAria: "Abrir LinkedIn de David Alexandre Fernandes",
+    avatarAlt: "Foto de perfil de David Alexandre Fernandes",
+    avatarZoomAlt: "Foto de perfil ampliada de David Alexandre Fernandes",
+    searchLabel: "Búsqueda",
+    searchPlaceholder: "Buscar por título, emisor, habilidad…",
+    categoryLabel: "Categoría",
+    allCategories: "Todas",
+    issuerLabel: "Emisor",
+    allIssuers: "Todos",
+    sortLabel: "Orden",
+    sortDateDesc: "Más recientes",
+    sortDateAsc: "Más antiguos",
+    sortTitleAsc: "Título A→Z",
+    statsLabel: "Métricas",
+    statsCredentials: "Credenciales",
+    statsVerified: "Con verificación",
+    statsIssuers: "Emisores",
+    statsSkills: "Habilidades",
+    statsVisibleItems: "Elementos visibles actualmente",
+    statsOfficialLink: "Con enlace oficial",
+    statsDifferentInstitutions: "Instituciones diferentes",
+    statsCatalogedSkills: "Competencias catalogadas",
+    issued: "Emitido",
+    expires: "Vence",
+    id: "ID",
+    qrUnavailable: "QR no disponible",
+    viewCertificate: "Ver certificado",
+    verifyCredential: "Verificar credencial",
+    openBadge: "Abrir badge",
+    emptyItems: "No se encontraron elementos.",
+    loadError: "No fue posible cargar las credenciales en este momento.",
+    certificateFallbackAlt: "Certificado"
+  }
+};
+
+function getPreferredLocale() {
+  const savedLocale = safeText(localStorage.getItem("locale"));
+  if (savedLocale && I18N[savedLocale]) return savedLocale;
+
+  const browserLocales = safeArray(navigator.languages).concat([navigator.language]);
+  const match = browserLocales
+    .map((locale) => safeText(locale).toLowerCase())
+    .find((locale) => locale.startsWith("pt") || locale.startsWith("en") || locale.startsWith("es"));
+
+  if (match?.startsWith("pt")) return "pt-BR";
+  if (match?.startsWith("es")) return "es";
+  return "en";
+}
+
+function t(key) {
+  return I18N[AppState.locale]?.[key] || I18N["pt-BR"][key] || key;
+}
+
+function applyTranslations() {
+  document.documentElement.lang = AppState.locale;
+
+  const setText = (selector, key) => {
+    const element = $(selector);
+    if (element) element.textContent = t(key);
+  };
+
+  setText("#pageTitle", "pageTitle");
+  setText("#languageLabel", "languageLabel");
+  setText("#btnPrint", "btnPrint");
+  setText("#linkedinSrOnly", "linkedinText");
+  setText("#searchLabel", "searchLabel");
+  setText("#categoryLabel", "categoryLabel");
+  setText("#issuerLabel", "issuerLabel");
+  setText("#sortLabel", "sortLabel");
+  setText("#allCategoriesOption", "allCategories");
+  setText("#allIssuersOption", "allIssuers");
+  setText("#sortDateDesc", "sortDateDesc");
+  setText("#sortDateAsc", "sortDateAsc");
+  setText("#sortTitleAsc", "sortTitleAsc");
+
+  UI.search.placeholder = t("searchPlaceholder");
+  UI.statsPanel.setAttribute("aria-label", t("statsLabel"));
+  UI.btnLinkedIn.setAttribute("aria-label", t("linkedinAria"));
+
+  $$("[data-i18n-attr]").forEach((element) => {
+    const [attribute, key] = element.dataset.i18nAttr.split(":");
+    if (attribute && key) element.setAttribute(attribute, t(key));
+  });
+
+  if (UI.languageSelect) {
+    const autoOption = UI.languageSelect.querySelector('option[value=""]');
+    if (autoOption) autoOption.textContent = t("languageAuto");
+  }
+}
+
+function setLocale(locale, persist = true) {
+  AppState.locale = I18N[locale] ? locale : "pt-BR";
+  if (persist) localStorage.setItem("locale", AppState.locale);
+  applyTranslations();
+}
 
 function safeText(value, fallback = "") {
   return String(value ?? fallback).trim() || fallback;
@@ -105,8 +288,8 @@ function setTheme(mode) {
 function formatDate(ym) {
   if (!ym) return "";
   const [year, month] = ym.split("-");
-  const months = ["jan", "fev", "mar", "abr", "mai", "jun", "jul", "ago", "set", "out", "nov", "dez"];
-  return `${months[(+month || 1) - 1]}/${year}`;
+  const date = new Date(Number(year), (+month || 1) - 1, 1);
+  return new Intl.DateTimeFormat(AppState.locale, { month: "short", year: "numeric" }).format(date);
 }
 
 function createLink(className, href, text) {
@@ -181,10 +364,10 @@ function renderStats(list) {
   const totalSkills = [...new Set(list.flatMap((cert) => cert.skills))].length;
 
   const items = [
-    { label: "Credenciais", value: list.length, icon: "🎓", helper: "Itens visíveis no momento" },
-    { label: "Com verificação", value: validLinks, icon: "✅", helper: "Com link oficial" },
-    { label: "Emissores", value: uniqueIssuers, icon: "🏢", helper: "Instituições diferentes" },
-    { label: "Skills", value: totalSkills, icon: "🧠", helper: "Competências catalogadas" }
+    { label: t("statsCredentials"), value: list.length, icon: "🎓", helper: t("statsVisibleItems") },
+    { label: t("statsVerified"), value: validLinks, icon: "✅", helper: t("statsOfficialLink") },
+    { label: t("statsIssuers"), value: uniqueIssuers, icon: "🏢", helper: t("statsDifferentInstitutions") },
+    { label: t("statsSkills"), value: totalSkills, icon: "🧠", helper: t("statsCatalogedSkills") }
   ];
 
   UI.statsPanel.replaceChildren(...items.map(({ label, value, icon, helper }) => {
@@ -238,9 +421,9 @@ function createCard(cert) {
 
   const meta = document.createElement("p");
   const parts = [];
-  if (formatDate(cert.issueDate)) parts.push(`Emitido: ${formatDate(cert.issueDate)}`);
-  if (formatDate(cert.expireDate)) parts.push(`Expira: ${formatDate(cert.expireDate)}`);
-  if (cert.id) parts.push(`ID: ${cert.id}`);
+  if (formatDate(cert.issueDate)) parts.push(`${t("issued")}: ${formatDate(cert.issueDate)}`);
+  if (formatDate(cert.expireDate)) parts.push(`${t("expires")}: ${formatDate(cert.expireDate)}`);
+  if (cert.id) parts.push(`${t("id")}: ${cert.id}`);
   meta.textContent = parts.join(" • ");
 
   textWrap.append(title, issuer, meta);
@@ -253,7 +436,7 @@ function createCard(cert) {
     } else {
       const qrFallback = document.createElement("div");
       qrFallback.className = "qr-placeholder";
-      qrFallback.textContent = "QR indisponível";
+      qrFallback.textContent = t("qrUnavailable");
       right.appendChild(qrFallback);
     }
   }
@@ -297,16 +480,16 @@ function createCard(cert) {
   if (primaryDocImage) {
     const openCertificate = document.createElement("button");
     openCertificate.className = "verify primary btn";
-    openCertificate.textContent = "Ver certificado aqui";
+    openCertificate.textContent = t("viewCertificate");
     openCertificate.dataset.docImagePath = primaryDocImage.imagePath;
     openCertificate.dataset.docTitle = primaryDocImage.label || cert.title;
     actions.appendChild(openCertificate);
   } else {
-    const verifyLink = createLink("verify primary", cert.verifyUrl, "Verificar credencial");
+    const verifyLink = createLink("verify primary", cert.verifyUrl, t("verifyCredential"));
     if (verifyLink) actions.appendChild(verifyLink);
   }
 
-  const badgeLink = createLink("verify", getBadgeSource(cert), "Abrir badge");
+  const badgeLink = createLink("verify", getBadgeSource(cert), t("openBadge"));
   if (badgeLink) actions.appendChild(badgeLink);
 
   if (actions.children.length) card.appendChild(actions);
@@ -328,7 +511,7 @@ function applyFiltersAndSort() {
   const sorters = {
     dateDesc: (a, b) => (b.issueDate || "").localeCompare(a.issueDate || ""),
     dateAsc: (a, b) => (a.issueDate || "").localeCompare(b.issueDate || ""),
-    titleAsc: (a, b) => a.title.localeCompare(b.title, "pt-BR")
+    titleAsc: (a, b) => a.title.localeCompare(b.title, AppState.locale)
   };
 
   filtered.sort(sorters[UI.sortBy.value] || sorters.dateDesc);
@@ -347,7 +530,7 @@ function render() {
   const list = applyFiltersAndSort();
 
   if (!list.length) {
-    renderEmptyState("Nenhum item encontrado.");
+    renderEmptyState(t("emptyItems"));
     return;
   }
 
@@ -373,9 +556,9 @@ async function initData() {
     AppState.certs = safeArray(data).map(normalizeCert);
 
     const categories = [...new Set(AppState.certs.map((cert) => cert.category).filter(Boolean))]
-      .sort((a, b) => a.localeCompare(b, "pt-BR"));
+      .sort((a, b) => a.localeCompare(b, AppState.locale));
     const issuers = [...new Set(AppState.certs.map((cert) => cert.issuer).filter(Boolean))]
-      .sort((a, b) => a.localeCompare(b, "pt-BR"));
+      .sort((a, b) => a.localeCompare(b, AppState.locale));
 
     populateSelectOptions(UI.category, categories);
     populateSelectOptions(UI.issuer, issuers);
@@ -383,7 +566,7 @@ async function initData() {
     render();
   } catch (error) {
     console.error(error);
-    renderEmptyState("Não foi possível carregar as credenciais no momento.");
+    renderEmptyState(t("loadError"));
   }
 }
 
@@ -396,6 +579,12 @@ function initEvents() {
   UI.btnLight.addEventListener("click", () => setTheme("light"));
   UI.btnDark.addEventListener("click", () => setTheme("dark"));
   UI.btnPrint.addEventListener("click", () => window.print());
+
+  UI.languageSelect.addEventListener("change", () => {
+    const selected = UI.languageSelect.value || getPreferredLocale();
+    setLocale(selected, true);
+    render();
+  });
 
   if (isSafeUrl(CONFIG.linkedin)) UI.btnLinkedIn.href = CONFIG.linkedin;
   else UI.btnLinkedIn.classList.add("hidden");
@@ -414,7 +603,7 @@ function initEvents() {
     if (!target) return;
 
     UI.certModalImg.src = target.dataset.docImagePath;
-    UI.certModalImg.alt = target.dataset.docTitle || "Certificado";
+    UI.certModalImg.alt = target.dataset.docTitle || t("certificateFallbackAlt");
     openModal(UI.certModal, target);
   });
 
@@ -443,6 +632,9 @@ function initEvents() {
 }
 
 (function init() {
+  const preferredLocale = getPreferredLocale();
+  setLocale(preferredLocale, false);
+  if (UI.languageSelect) UI.languageSelect.value = localStorage.getItem("locale") || "";
   setTheme(localStorage.getItem("theme") || "dark");
   initEvents();
   initData();

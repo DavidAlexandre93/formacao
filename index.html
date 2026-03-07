@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -23,10 +23,17 @@
       <div class="hero">
         <header>
           <div class="title">
-            <img class="avatar" id="avatarImg" src="img/perfil.jpg" alt="Foto de perfil de David Alexandre Fernandes" tabindex="0" />
-            <h1>David Alexandre Fernandes 🎓 Certificados &amp; Certificações</h1>
+            <img class="avatar" id="avatarImg" src="img/perfil.jpg" alt="Foto de perfil de David Alexandre Fernandes" tabindex="0" data-i18n-attr="alt:avatarAlt" />
+            <h1 id="pageTitle">David Alexandre Fernandes 🎓 Certificados &amp; Certificações</h1>
           </div>
           <div class="toolbar">
+            <label for="languageSelect" class="sr-only" id="languageLabel">Idioma</label>
+            <select id="languageSelect" class="input language-select" aria-labelledby="languageLabel">
+              <option value="">Idioma automático</option>
+              <option value="pt-BR">Português (Brasil)</option>
+              <option value="en">English</option>
+              <option value="es">Español</option>
+            </select>
             <div class="switch" role="group" aria-label="Tema">
               <button id="btnLight" aria-label="Claro" title="Claro" aria-pressed="false">
                 <svg class="theme-icon" viewBox="0 0 24 24" aria-hidden="true">
@@ -41,8 +48,8 @@
               </button>
             </div>
             <button id="btnPrint" class="btn">🖨️ Exportar PDF</button>
-            <a class="linkedin-cta" id="btnLinkedIn" href="#" target="_blank" rel="noopener" aria-label="Abrir LinkedIn de David Alexandre Fernandes">
-              <span class="sr-only">LinkedIn de David Alexandre Fernandes</span>
+            <a class="linkedin-cta" id="btnLinkedIn" href="#" target="_blank" rel="noopener" aria-label="Abrir LinkedIn de David Alexandre Fernandes" data-i18n-attr="aria-label:linkedinAria">
+              <span class="sr-only" id="linkedinSrOnly">LinkedIn de David Alexandre Fernandes</span>
               <svg viewBox="0 0 24 24" aria-hidden="true">
                 <path d="M20.45 20.45h-3.56v-5.58c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.95v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.38-1.85 3.61 0 4.27 2.38 4.27 5.47v6.27zM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14zM7.12 20.45H3.56V9h3.56v11.45z"/>
               </svg>
@@ -54,27 +61,27 @@
 
       <section class="filters" aria-label="Filtros">
         <div>
-          <label for="search">Busca</label>
+          <label for="search" id="searchLabel">Busca</label>
           <input id="search" class="input" placeholder="Buscar por título, emissor, habilidade…" />
         </div>
         <div>
-          <label for="filterCategory">Categoria</label>
+          <label for="filterCategory" id="categoryLabel">Categoria</label>
           <select id="filterCategory">
-            <option value="">Todas</option>
+            <option value="" id="allCategoriesOption">Todas</option>
           </select>
         </div>
         <div>
-          <label for="filterIssuer">Emissor</label>
+          <label for="filterIssuer" id="issuerLabel">Emissor</label>
           <select id="filterIssuer">
-            <option value="">Todos</option>
+            <option value="" id="allIssuersOption">Todos</option>
           </select>
         </div>
         <div>
-          <label for="sortBy">Ordenação</label>
+          <label for="sortBy" id="sortLabel">Ordenação</label>
           <select id="sortBy">
-            <option value="dateDesc">Mais recentes</option>
-            <option value="dateAsc">Mais antigos</option>
-            <option value="titleAsc">Título A→Z</option>
+            <option value="dateDesc" id="sortDateDesc">Mais recentes</option>
+            <option value="dateAsc" id="sortDateAsc">Mais antigos</option>
+            <option value="titleAsc" id="sortTitleAsc">Título A→Z</option>
           </select>
         </div>
       </section>
@@ -83,7 +90,7 @@
     </div>
 
     <div id="zoomOverlay" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Foto ampliada de perfil" tabindex="-1">
-      <img src="img/perfil.jpg" alt="Foto ampliada de David Alexandre Fernandes" />
+      <img src="img/perfil.jpg" alt="Foto ampliada de David Alexandre Fernandes" data-i18n-attr="alt:avatarZoomAlt" />
     </div>
 
     <div id="certModal" class="modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Visualização do certificado" tabindex="-1">
