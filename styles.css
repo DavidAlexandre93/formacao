@@ -33,8 +33,10 @@ header { display:flex; gap:16px; justify-content:space-between; flex-wrap:wrap; 
   border-radius: 50%;
   border: 1px solid var(--border);
   object-fit: cover;
-  object-position: center 20%;
+  object-position: center 35%;
+  display: block;
   cursor: zoom-in;
+  aspect-ratio: 1 / 1;
 }
 .toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
 .linkedin-cta {
