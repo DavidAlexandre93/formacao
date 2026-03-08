@@ -19,7 +19,6 @@ const UI = {
   btnLight: $("#btnLight"),
   btnDark: $("#btnDark"),
   btnPrint: $("#btnPrint"),
-  languageSelect: $("#languageSelect"),
   btnLinkedIn: $("#btnLinkedIn"),
   avatarImg: $("#avatarImg"),
   zoomOverlay: $("#zoomOverlay"),
@@ -37,8 +36,6 @@ const AppState = {
 const I18N = {
   "pt-BR": {
     pageTitle: "David Alexandre Fernandes 🎓 Certificados & Certificações",
-    languageLabel: "Idioma",
-    languageAuto: "Idioma automático",
     btnPrint: "🖨️ Exportar PDF",
     linkedinText: "LinkedIn de David Alexandre Fernandes",
     linkedinAria: "Abrir LinkedIn de David Alexandre Fernandes",
@@ -76,8 +73,6 @@ const I18N = {
   },
   en: {
     pageTitle: "David Alexandre Fernandes 🎓 Certificates & Credentials",
-    languageLabel: "Language",
-    languageAuto: "Automatic language",
     btnPrint: "🖨️ Export PDF",
     linkedinText: "David Alexandre Fernandes' LinkedIn",
     linkedinAria: "Open David Alexandre Fernandes' LinkedIn",
@@ -115,8 +110,6 @@ const I18N = {
   },
   es: {
     pageTitle: "David Alexandre Fernandes 🎓 Certificados y Certificaciones",
-    languageLabel: "Idioma",
-    languageAuto: "Idioma automático",
     btnPrint: "🖨️ Exportar PDF",
     linkedinText: "LinkedIn de David Alexandre Fernandes",
     linkedinAria: "Abrir LinkedIn de David Alexandre Fernandes",
@@ -181,7 +174,6 @@ function applyTranslations() {
   };
 
   setText("#pageTitle", "pageTitle");
-  setText("#languageLabel", "languageLabel");
   setText("#btnPrint", "btnPrint");
   setText("#linkedinSrOnly", "linkedinText");
   setText("#searchLabel", "searchLabel");
@@ -203,10 +195,6 @@ function applyTranslations() {
     if (attribute && key) element.setAttribute(attribute, t(key));
   });
 
-  if (UI.languageSelect) {
-    const autoOption = UI.languageSelect.querySelector('option[value=""]');
-    if (autoOption) autoOption.textContent = t("languageAuto");
-  }
 }
 
 function setLocale(locale, persist = true) {
@@ -580,12 +568,6 @@ function initEvents() {
   UI.btnDark.addEventListener("click", () => setTheme("dark"));
   UI.btnPrint.addEventListener("click", () => window.print());
 
-  UI.languageSelect.addEventListener("change", () => {
-    const selected = UI.languageSelect.value || getPreferredLocale();
-    setLocale(selected, true);
-    render();
-  });
-
   if (isSafeUrl(CONFIG.linkedin)) UI.btnLinkedIn.href = CONFIG.linkedin;
   else UI.btnLinkedIn.classList.add("hidden");
 
@@ -634,7 +616,6 @@ function initEvents() {
 (function init() {
   const preferredLocale = getPreferredLocale();
   setLocale(preferredLocale, false);
-  if (UI.languageSelect) UI.languageSelect.value = localStorage.getItem("locale") || "";
   setTheme(localStorage.getItem("theme") || "dark");
   initEvents();
   initData();
