@@ -37,7 +37,6 @@ header { display:flex; gap:16px; justify-content:space-between; flex-wrap:wrap; 
   cursor: zoom-in;
 }
 .toolbar { display:flex; flex-wrap:wrap; gap:10px; align-items:center; }
-.language-select { min-width: 188px; }
 .linkedin-cta {
   width: 72px;
   height: 72px;
